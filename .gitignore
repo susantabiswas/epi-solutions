@@ -2,4 +2,4 @@
 .vscode/launch.json
 .vscode/settings.json
 .vscode/tasks.json
-intersecting_rectangles.exe
+*.exe
