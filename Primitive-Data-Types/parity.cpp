@@ -29,6 +29,12 @@ bool parity1(unsigned int x){
 // Tc: O(logn), n=no. of bits
 bool parity2(unsigned int x){
     short parity = 0;
+    parity ^= (x>>32) ^ (x>>32);
+    parity ^= (x>>16) ^ (x>>16);
+    parity ^= (x>>8) ^ (x>>8);
+    parity ^= (x>>4) ^ (x>>4);
+    parity ^= (x>>2) ^ (x>>2);
+    parity ^= (x>>1) ^ (x>>1);
     return parity;
 }
 
@@ -36,13 +42,14 @@ bool parity2(unsigned int x){
 // Tc: O(k), k=no. of set bits
 bool parity3(unsigned int x){
     short parity = 0;
+
     return parity;
 } 
 
 int main(){
     
     for(size_t i = 0; i < 10; i++){
-        cout << i << ": " << parity1(i) << endl;
+        cout << i << ": " << parity1(i) << ", " << parity2(i) << endl;
     }
     
     return 0;
