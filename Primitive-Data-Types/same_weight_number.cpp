@@ -36,7 +36,7 @@ int sameWeightNumber(unsigned int x){
         }
     }
     // when all the bits of the number are same i.e, either 1 or 0
-    throw 0;
+    return 0;
 }
 
 int main(){
