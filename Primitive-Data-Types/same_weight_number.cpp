@@ -29,7 +29,7 @@ int sameWeightNumber(unsigned int x){
     
     for(int i = 0; i < word_size - 1; i++){
         // if the adjacent bits are not same
-        if((x >> i)&1 != (x >> i+1)&1){
+        if(((x >> i) & 1) != ((x >> i+1) & 1)){
             // flip the bits
             x ^= (1U << i) | (1U << i+1);
             return x;
