@@ -32,6 +32,7 @@ int sameWeightNumber(unsigned int x){
         if(((x >> i) & 1) != ((x >> i+1) & 1)){
             // flip the bits
             x ^= (1U << i) | (1U << i+1);
+            cout << i << ", "<<i+1;
             return x;
         }
     }
@@ -40,6 +41,6 @@ int sameWeightNumber(unsigned int x){
 }
 
 int main(){
-    cout << sameWeightNumber(0);
+    cout << sameWeightNumber(~0);
     return 0;
 }
