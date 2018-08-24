@@ -5,7 +5,6 @@
     Input:Real number          
     Output:bool        
 */
-
 #include<iostream>
 #include<vector>
 using namespace std;
@@ -27,31 +26,38 @@ bool parity1(unsigned int x){
 // divide the bit pattern into segments and subsegments. We find the XOR for the
 // smallest segment and work our way up
 // Tc: O(logn), n=no. of bits
-bool parity2(unsigned int x){
-    short parity = 0;
-    parity ^= (x>>32) ^ (x>>32);
-    parity ^= (x>>16) ^ (x>>16);
-    parity ^= (x>>8) ^ (x>>8);
-    parity ^= (x>>4) ^ (x>>4);
-    parity ^= (x>>2) ^ (x>>2);
-    parity ^= (x>>1) ^ (x>>1);
-    return parity;
+bool parity2(unsigned long  x){
+   // x ^= x >> 32;
+    x ^= x >> 16;
+    x ^= x >> 8;
+    x ^= x >> 4;
+    x ^= x >> 2;
+    x ^= x >> 1;
+    
+    // retrieve the final parity bit
+    return x & 0x1;
 }
 
 // We traverse only the set bits
 // Tc: O(k), k=no. of set bits
 bool parity3(unsigned int x){
     short parity = 0;
-
+    // the loop runs for every set bit, so we are traversing 
+    // and counting only the set bits 
+    while(x){
+        // XOR the result with 1
+        parity ^= 1;
+        // clear the current rightmost set bit
+        x = x & (x - 1); 
+    }
     return parity;
 } 
 
 int main(){
-    
     for(size_t i = 0; i < 10; i++){
-        cout << i << ": " << parity1(i) << ", " << parity2(i) << endl;
-    }
-    
+        cout << i << ": " << parity1(i) << ", " 
+                << parity2(i) << ", " << parity3(i) << endl;
+    } 
     return 0;
 }
 
