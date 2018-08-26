@@ -21,7 +21,7 @@ using namespace std;
 
 // converts a base b1 number to base 10
 /*
-    To change to base 10, we mutliply the number with its base values raised
+    To change to base 10, we multiply the number with its base values raised
     to the power of digit position
  */
 int convertToDecimal(const string&  num, int base){
@@ -33,12 +33,12 @@ int convertToDecimal(const string&  num, int base){
         // multiply by base value
         num_10 *= base;
         // take out the digit from the number
-        // in case the psoiton is occupied by A, B.. F we convert it to
+        // in case the position is occupied by A, B.. F we convert it to
         // their values 10, 11,... 15
         if(isdigit(num[i])){
             num_10 += num[i] - '0';
         }
-        else{
+        else{   // If b1 >= 10 then it can have A, B .. occupy positions
             // since each charc from A onwards is atleast >= 10
             num_10 += num[i] - 'A' + 10;
         }
@@ -49,7 +49,11 @@ int convertToDecimal(const string&  num, int base){
 
 // converts the number from decimal to given base b2
 string convertToBase(int num, int base){
-
+    if(num == 0)
+        return "";
+    // now the remainder can be single or multiple digit long
+    return convertToBase(num / base, base) +
+           (char)(num % base < 10 ? num % base + '0': (num % base) - 10 + 'A');
 }
 
 // driver function for this task
@@ -64,6 +68,10 @@ string convertBasesDriver(const string& num_b1, int b1, int b2){
 }
 
 int main(){
-    cout << convertToDecimal("1001", 2);
+    // testing
+    cout << convertToDecimal("1001", 2) << endl;
+    cout << convertToBase(15, 2) << endl << endl;
+
+    cout << convertBasesDriver("615", 7, 13);
     return 0;
 }
