@@ -13,6 +13,7 @@
         number in base b2
 
     For this first we will convert the number to base 10. After that convert it to b2.
+    TC: O( n * log_b2(b1) ) +  O(n), n = no. of characters in string num.
 */
 
 #include<iostream>
