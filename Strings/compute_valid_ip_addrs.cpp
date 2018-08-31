@@ -8,6 +8,8 @@
 
     Output:
         All possible Ip addresses in string form
+
+    TC: O(2^32) or constant time O(1)
 */
 
 #include<iostream>
