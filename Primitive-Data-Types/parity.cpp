@@ -22,7 +22,7 @@ bool parity1(unsigned int x){
     return parity;
 }
 
-// Since XOR is associative as well as commutative, we canuse that fact to 
+// Since XOR is associative as well as commutative, we can use that fact to 
 // divide the bit pattern into segments and subsegments. We find the XOR for the
 // smallest segment and work our way up
 // Tc: O(logn), n=no. of bits
