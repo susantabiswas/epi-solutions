@@ -15,24 +15,26 @@ using namespace std;
 // finds the square of the number
 // TC: O(logn), n=power
 // the power of can be broken down in terms of squares of smaller numbers
-double findPower1(float x, int n){
-    // when power is 0
-    if(n == 0)
-        return 1;
-    // if negative power 
-    if(n < 0 && n == -1)
-        return 1.0/x;
-
-    double result = findPower1(x, n / 2);
-
-    // if power is even    
-    if(n % 2 == 0){
-        return result * result;
-    }
-    else{
-        // if it is odd, we can subdivide the power as even number multiplied by that no.
-        return result * result * x;
-    }
+double findPower(int num, int i){
+	// base case
+	if(i == 0)
+		return 1;
+		
+	double val = findPower(num, i/2);
+	
+	// if the power is even
+	if( i % 2 == 0){
+		return val * val;
+	}
+	// if the power is odd
+	else{
+		// if positive power
+		if( i > 0)
+			return val * val * num;
+		// if negative power
+		else if( i < 0)
+			return val * val * 1.0/num;
+	}
 }
 
 // finds the nth power of a number using the bit representation iteratively.
