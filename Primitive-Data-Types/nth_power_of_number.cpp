@@ -37,6 +37,28 @@ double findPower(int num, int i){
 	}
 }
 
+// finds the nth power of a number recurrsively
+long long findNthPowerRec(int num, int n){
+	// when the number is zero
+	if(num == 0)
+		return 0;
+	// base case when the power is zero
+	if(n == 0)
+		return 1;
+	// when the exponent is negative
+	if(n == -1)
+		return 1.0/num;
+	// find the value by making further calls
+	long long val = findNthPowerRec(num, n >> 1);
+	// if the last digit is 1, that means the exponent is formed by adding exponent 1, so multiply 
+	// by the number. Eg: 2^(101): 2^(10)*2^(10)*2^(1)
+	if(n & 1)
+		return num * val * val;
+	else{
+		return val* val;
+	}
+}
+
 // finds the nth power of a number using the bit representation iteratively.
 // TC: O(n), n=no. of bits
 double findPower2Iter(double x, long long n){
@@ -51,8 +73,8 @@ double findPower2Iter(double x, long long n){
 
     // till the power is not zero
     while(n){
-        // if the current LSB of power is 1 or we can say if the power is odd
-        // when the power is odd we multiply the number thrice
+        // if the last digit is 1, that means the exponent is formed by adding exponent 1, so multiply 
+	// by the number. Eg: 2^(101): 2^(10)*2^(10)*2^(1)
         if(n & 1)
             result = result * x;
         // find the square of current number for the next iteration
