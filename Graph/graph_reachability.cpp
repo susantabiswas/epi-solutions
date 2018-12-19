@@ -21,6 +21,7 @@
 #include<unordered_map>
 #include<unordered_set>
 #include<memory>
+#include<queue>
 using namespace std;
 
 // structure for match outcome
@@ -70,13 +71,59 @@ bool isReachableDFS(const unordered_map<string, unordered_set<string>> &g, const
 	return false;
 }
 
+// check reachablity using BFS
+bool isReachableBFS(const unordered_map<string, unordered_set<string>>& g,
+					const string& start, const string& dest, unordered_set<string>* visited_ptr){
+
+	// set reference
+	unordered_set<string>& visited = *visited_ptr;
+	// required for BFS
+	queue<string> q;
+	
+	// keeps track of current element
+	string curr;
+	
+	// starting element
+	q.push(start);
+	visited.emplace(start);
+	
+	while(q.size() > 0){
+		curr = q.front();
+	
+		// remove the node
+		q.pop();
+		
+		// check if the dest has been reached or not
+		if(curr == dest){
+			return true;
+		}
+		
+		// push all the elements in the same level
+		for(const auto node: g.at(curr)){
+			// push all the adjacent unvisited nodes
+			if(visited.find(node) == visited.end()){
+				q.push(node);
+				// make it visited
+				visited.emplace(curr);
+			}
+	
+		}
+	}
+	
+	return false;						
+}
+
 // for checking whether creating such a series is possible or not
-bool isPossiblePath(const vector<MatchResults>& matches, const string& A, const string& B){
+bool isPossiblePath(const vector<MatchResults>& matches, const string& A, const string& B, const string& method){
 	// create the graph
 	unordered_map<string, unordered_set<string>> g = buildGraph(matches);
 	
-	// check
-	return isReachableDFS(g, A, B, make_unique<unordered_set<string>>().get());
+	// check using DFS
+	if(method == "DFS")
+		return isReachableDFS(g, A, B, make_unique<unordered_set<string>>().get());
+	// check using BFS
+	else if(method == "BFS")
+		return isReachableBFS(g, A, B, make_unique<unordered_set<string>>().get());
 }
 
 // prints the graph
@@ -99,6 +146,7 @@ int main() {
 									{"D", "A"}, {"E", "D"}, {"B", "D"}
 								};
 	printGraph(buildGraph(matches));
-	cout << isPossiblePath(matches, "A", "B");
+	cout << isPossiblePath(matches, "A", "B", "DFS");
+	cout << endl << isPossiblePath(matches, "A", "B", "BFS");
 	return 0;
 }
