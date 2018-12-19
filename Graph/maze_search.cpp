@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include<vector>
+#include<queue>
 using namespace std;
 
 // tile colors
@@ -46,6 +47,77 @@ bool isValidStep(const vector<vector<int>>& maze, const Coordinate& step){
 		return false;
 }
 
+
+// search using BFS
+// for finding the path, we need a queue of paths also till each level. We keep track of paths 
+// in a queue originating from different ancestors
+bool searchBFS(vector<vector<int>>& maze, const Coordinate& start, const Coordinate& dest, 
+				vector<Coordinate>& final_path){
+	// for keeping track of nodes
+	queue<Coordinate> q;
+	// push the starting element
+	q.push(start);
+	// make it BLACK
+	maze[start.x][start.y] = BLACK;
+	// for storing the path
+	queue<vector<Coordinate>> path;
+	// add the starting node to the path
+	path.push(vector<Coordinate>{start});
+	
+	// current node
+	Coordinate curr;
+	// for keeping track of next step to take
+	Coordinate next_step;
+	// for keeping track of current path
+	vector<Coordinate> curr_path;
+	
+	// valid steps
+	vector<Coordinate> steps = {
+								{1, 0}, 
+								{0, 1},
+								{-1, 0},
+								{0 ,-1}
+							};
+	// do BFS
+	while(!q.empty()){
+		// take the current node
+		curr = q.front();
+		// remove the node
+		q.pop();
+		// current path
+		curr_path = path.front();
+		path.pop();
+		
+		if(curr == dest){
+			// add the shortest path to the final path
+			final_path = curr_path;
+			return true;
+		}
+			
+		// add the adjacent nodes
+		for(const Coordinate step: steps){
+			// next potential node's coordinates
+			next_step.x = curr.x + step.x;
+			next_step.y = curr.y + step.y;
+			
+			// check if the step is valid or not
+			if(isValidStep(maze, next_step)){
+				// make it BLACK
+				maze[next_step.x][next_step.y] = BLACK;
+				// add the current path with current node to the path queue
+				curr_path.push_back(next_step);
+				path.push(curr_path);
+				curr_path.pop_back();
+				// add to queue
+				q.push(next_step);
+			}
+		}
+	}
+	
+	return false;
+}
+		
+				
 // for finding the path using DFS
 bool searchDFS(vector<vector<int>>& maze, const Coordinate& curr, const Coordinate& dest,
 				vector<Coordinate>& path){
@@ -91,7 +163,7 @@ vector<Coordinate> mazeSearch(vector<vector<int>>& maze, const Coordinate& start
 	// here to keep track of visited nodes, we just make them BLACK
 	maze[start.x][start.y] = BLACK;
 	// check if there exists a path or not
-	if(searchDFS(maze, start, dest, path)){
+	if(searchBFS(maze, start, dest, path)){
 		return path;
 	}
 	// remove the starting tile from path since no valid path exists
