@@ -63,7 +63,7 @@ bool isReachableDFS(const unordered_map<string, unordered_set<string>> &g, const
 	
 	// we will do DFS
 	for(const string& team: g.at(curr)){
-		if(isReachableDFS(g, curr, team, visited_ptr))
+		if(isReachableDFS(g, team, dest, visited_ptr))
 			return true;
 	}
 	
@@ -79,13 +79,26 @@ bool isPossiblePath(const vector<MatchResults>& matches, const string& A, const 
 	return isReachableDFS(g, A, B, make_unique<unordered_set<string>>().get());
 }
 
+// prints the graph
+void printGraph(const unordered_map<string, unordered_set<string>>& g){
+	
+	for(const auto it: g){
+		cout << it.first << ": ";
+		for(const auto inner: it.second){
+			cout << inner << " ";
+		}
+		cout << endl;
+	}	
+	
+}
+
 int main() {
 	// match outcomes
 	vector<MatchResults> matches = {
 									{"A", "C"}, {"C", "D"}, {"C", "E"}, 
-									{"D", "A"}, {"E", "D"}, {"D", "B"}
+									{"D", "A"}, {"E", "D"}, {"B", "D"}
 								};
-	
+	printGraph(buildGraph(matches));
 	cout << isPossiblePath(matches, "A", "B");
 	return 0;
 }
