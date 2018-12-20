@@ -34,8 +34,36 @@ bool isValid(const vector<vector<int>>& arr, const Coordinate& step,
 	return step.x >= 0 && step.x < m && step.y >= 0 && step.y < n; 
 }
 
+// flipping the colors using DFS
+void flipColorDFS(vector<vector<int>>& arr, const Coordinate& curr){
+	// possible relative neighbor coordinates
+	vector<Coordinate> steps = { {1, 0}, {0, 1}, {-1, 0}, {0, -1} };
+	
+	Coordinate next_step;
+	// matrix dimensions
+	const int m = arr.size();
+	const int n = arr[0].size();
+	
+	// color to flip
+	Color color = static_cast<Color>(arr[curr.x][curr.y]);
+	
+	// flip the color of current tile
+	arr[curr.x][curr.y] = !color;
+	
+	// see the adjacent pixels
+	for(const auto& step: steps){
+		next_step.x = curr.x + step.x;
+		next_step.y = curr.y + step.y;
+		
+		// if the adjacent node is of same color and is a valid position
+		if(isValid(arr, next_step, m, n) && arr[next_step.x][next_step.y] == color){
+			flipColorDFS(arr, next_step);
+		}
+	}
+}
+
 // here the color flipping will be done using BFS
-void flipColor(vector<vector<int>>& arr, const Coordinate& start){
+vector<vector<int>> flipColorBFS(vector<vector<int>> arr, const Coordinate& start){
 	
 	// matrix dimensions
 	const int m = arr.size();
@@ -74,6 +102,8 @@ void flipColor(vector<vector<int>>& arr, const Coordinate& start){
 			}
 		}
 	}
+	
+	return arr;
 }
 
 void printMatrix(const vector<vector<int>>& arr){
@@ -97,8 +127,12 @@ int main() {
 	cout << "BEFORE:\n";						
 	printMatrix(arr);
 	
-	cout << "\nAFTER\n";
-	flipColor(arr, {0, 4});
+	cout << "\nBFS\n";
+	vector<vector<int>> flipped_arr = flipColorBFS(arr, {4, 4});
+	printMatrix(flipped_arr);
+	
+	cout << "\nDFS\n";
+	flipColorDFS(arr, {4, 4});
 	printMatrix(arr);
 	
 	return 0;
