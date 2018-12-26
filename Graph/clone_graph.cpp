@@ -16,6 +16,7 @@
 #include<unordered_map>
 #include<deque>
 #include<vector>
+#include<queue>
 using namespace std;
 
 // strcuture for vertex
@@ -86,12 +87,39 @@ void doDFS(Vertex* u_orig, Vertex* u_copy, vector<Vertex*>& clone, unordered_map
 }
 
 // use BFS for cloning the graph
-void doBFS(){
+void doBFS(Vertex*& u_orig, Vertex*& u_copy, vector<Vertex*>& clone, unordered_map<int, Vertex*>& visited){
+	// for BFS
+	queue<Vertex*> q;
+	// add the node to queue and make it visited
+	q.push(u_orig);
+	visited[u_orig->data] = u_copy;
+	// for keeping track of current vertex
+	Vertex* curr = nullptr;
 	
+	while(!q.empty()){
+		curr = q.front();
+		q.pop();
+		
+		// traverse the adjacent nodes
+		for(Vertex* v: curr->edges){
+			// if the node is unvisited, then create a copy of it
+			if(visited.find(v->data) == visited.end()){
+				// create a copy
+				Vertex* v_copy = createNode(v->data);
+				clone.emplace_back(v_copy);
+				q.push(v);
+				// make it visited
+				visited[v->data] = v_copy;
+			}
+			
+			// clone the edge
+			visited[curr->data]->edges.push_back(visited[v->data]);
+		}
+	}
 }
 
 // for cloning the graph
-vector<Vertex*> cloneGraph(Vertex* u){
+vector<Vertex*> cloneGraph(Vertex* u, string method = "DFS"){
 	// create the root node
 	vector<Vertex*> clone;
 	// for keeping track of visited nodes,
@@ -104,7 +132,10 @@ vector<Vertex*> cloneGraph(Vertex* u){
 	clone.emplace_back(u_copy);
 	
 	// for cloning we can use either BFS or DFS
-	doDFS(u, u_copy, clone, visited);
+	if(method == "DFS")
+		doDFS(u, u_copy, clone, visited);
+	else if(method == "BFS")
+		doBFS(u, u_copy, clone, visited);
 	
 	return clone;
 }
@@ -119,9 +150,14 @@ int main(){
 	addEdge(g[2], g[3]);
 	addEdge(g[3], g[4]);
 	printGraph(g);
-	cout << endl << endl;
 	
-	vector<Vertex*> cloned_graph = cloneGraph(g[0]);
+	cout << endl << "DFS" << endl;
+	vector<Vertex*> cloned_graph = cloneGraph(g[0], "DFS");
 	printGraph(cloned_graph);
+	
+	cout << endl << "BFS" << endl;
+	cloned_graph = cloneGraph(g[0], "BFS");
+	printGraph(cloned_graph);
+	
 	return 0;
 }
