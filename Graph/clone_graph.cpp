@@ -120,6 +120,8 @@ void doBFS(Vertex*& u_orig, Vertex*& u_copy, vector<Vertex*>& clone, unordered_m
 
 // for cloning the graph
 vector<Vertex*> cloneGraph(Vertex* u, string method = "DFS"){
+	if(!u)
+		return vector<Vertex*>{};
 	// create the root node
 	vector<Vertex*> clone;
 	// for keeping track of visited nodes,
