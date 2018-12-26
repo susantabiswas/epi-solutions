@@ -7,7 +7,7 @@
 	Input: Dictionary of string, s, t
 	Output: Return the smallest sequence length if there are many, else return -1
 	
-	TC: O(nd), n: string length, d: no. of words in dict 
+	TC: O(n * logd * d), n: string length, d: no. of words in dict, logd: for finding in set 
 	SC: O(d)
 */
 #include <iostream>
