@@ -6,6 +6,9 @@
 	
 	Input: Dictionary of string, s, t
 	Output: Return the smallest sequence length if there are many, else return -1
+	
+	TC: O(nd), n: string length, d: no. of words in dict 
+	SC: O(d)
 */
 #include <iostream>
 #include<unordered_set>
