@@ -2,7 +2,7 @@
 	Given a vertex of a directed graph, the task is to clone the graph that is reachable from that
 	vertex. The clone should be a copy.
 	
-	Input: vertex (Structure: int lablel, list of edges)
+	Input: vertex (Structure: int label, list of edges)
 	Output: Graph Clone, return the clone vertex of the input vertex
 	
 	Solution:
