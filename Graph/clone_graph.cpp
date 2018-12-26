@@ -62,6 +62,53 @@ void printGraph(const vector<Vertex*>& g){
 	}
 }
 
+// use DFS for cloning the graph
+void doDFS(Vertex* u_orig, Vertex* u_copy, vector<Vertex*>& clone, unordered_map<int, Vertex*>& visited){
+	// make the node visited
+	visited[u_orig->data] = u_copy;
+	
+	// traverse the adjacent edges 
+	// and clone the edges as we go
+	for(Vertex* v: u_orig->edges){
+		// traverse the node only if it is unvisited
+		if(visited.find(v->data) == visited.end()){
+			// make a copy of node
+			Vertex* v_copy = createNode(v->data);
+			// add the node to the cloned graph
+			clone.emplace_back(v_copy);
+		
+			// do DFS 
+			doDFS(v, v_copy, clone, visited);
+		}
+		// create a copy of edge
+		u_copy->edges.push_back(visited[v->data]);
+	}
+}
+
+// use BFS for cloning the graph
+void doBFS(){
+	
+}
+
+// for cloning the graph
+vector<Vertex*> cloneGraph(Vertex* u){
+	// create the root node
+	vector<Vertex*> clone;
+	// for keeping track of visited nodes,
+	// we map each label node to their address
+	unordered_map<int, Vertex*> visited;
+	
+	// make a copy of root node
+	Vertex* u_copy = createNode(u->data);
+	// add the node to the cloned graph
+	clone.emplace_back(u_copy);
+	
+	// for cloning we can use either BFS or DFS
+	doDFS(u, u_copy, clone, visited);
+	
+	return clone;
+}
+
 int main(){
 	vector<Vertex*> g = createGraph(5);
 	
@@ -72,6 +119,9 @@ int main(){
 	addEdge(g[2], g[3]);
 	addEdge(g[3], g[4]);
 	printGraph(g);
+	cout << endl << endl;
 	
+	vector<Vertex*> cloned_graph = cloneGraph(g[0]);
+	printGraph(cloned_graph);
 	return 0;
 }
