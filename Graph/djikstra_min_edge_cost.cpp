@@ -30,7 +30,7 @@ struct Vertex{
 		
 	int id;
 	const Vertex* pred = nullptr;
-	vector<DistanceWithFewestEdges> edges;
+	vector<DistanceWithDistance> edges;
 };
 
 // overload comparator
@@ -59,6 +59,7 @@ void djikstraShortestPath(Vertex* src, const Vertex* target){
 		// if the node is the target node, then the path has been found
 		if(u->id == target->id)
 			break;
+		// remove from unvisited set
 		unvisited.erase(unvisited.begin());
 		
 		// relax the adjacent vertex edges
