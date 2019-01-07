@@ -44,7 +44,7 @@ int findMajorityElement(vector<int>& arr){
 }
 
 int main() {
-	vector<int>> arr = {1, 1, 233, 1, 9, 1, 9, 1};
+	vector<int> arr = {1, 1, 233, 1, 9, 1, 9, 1};
 	
 	cout << findMajorityElement(arr);
 	return 0;
