@@ -26,7 +26,8 @@ vector<int> hasTwoSum(vector<int>& arr, int sum){
 	while(i <= j){
 		// when the sum is found
 		if(arr[i] + arr[j] == sum){
-			nums.emplace_back(arr[i], arr[j]);
+			nums.emplace_back(arr[i]);
+			nums.emplace_back(arr[j]);
 			break;
 		}
 		
@@ -50,15 +51,14 @@ vector<int> hasThreeSum(vector<int>& arr, int& sum){
 	sort(arr.begin(), arr.end());
 	vector<int> nums;
 	
-	/*// for each number we will see if sum - num[i] is possible using two numbers
+	// for each number we will see if sum - num[i] is possible using two numbers
 	for(int i = 0; i<arr.size(); i++){
-		auto nums = hasTwoSum(arr, sum - arr[i]);
-		
+		nums = hasTwoSum(arr, sum - arr[i]);
 		if(!nums.empty()){
 			nums.emplace_back(arr[i]);
 			break;
 		}
-	}*/
+	}
 	return nums;
 }
 
@@ -67,8 +67,9 @@ int main() {
 	int sum = 8;
 
 	vector<int> nums = hasThreeSum(arr, sum);
-/*	for(auto el: nums)
-		cout << el << " ";*/
+	
+	for(auto el: nums)
+		cout << el << " ";
 
 	return 0;
 }
