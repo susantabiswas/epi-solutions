@@ -23,6 +23,10 @@
 	
 	NOTE: Below is a generalized algo where it is not necessary that such a city exists.
 	TC: O(n)
+	
+	Reference: Nice explanation
+	https://roy3221.gitbooks.io/algorithms/content/ch8_greedy/leetcode_134_gas_station.html
+	
 */
 
 #include <iostream>
