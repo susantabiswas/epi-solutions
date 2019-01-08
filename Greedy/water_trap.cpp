@@ -2,6 +2,7 @@
 	Given an array representing height coordinates and assume their index position
 	as the x-coordinate. Find the pair of heights which makes the largest volume for
 	trapping water inside.
+	Assume the height to be 1 unit.
 	
 	Input: vector of numbers
 	Output: pair of heights
