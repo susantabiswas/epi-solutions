@@ -21,6 +21,7 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+#include <string>
 using namespace std;
 
 // finds the largest rectangle area
@@ -36,38 +37,40 @@ int findLargestRectangle(vector<int> heights){
 		if(buildings.empty() || heights[buildings.top()] < heights[i]){
 			buildings.push(i);
 		}
-		else{	// when the current height is shorter
-			if(heights[buildings.top()] >= heights[i]){
-				// pop the buildings and at the same time compute the largest area for each
-				while(!buildings.empty() && heights[buildings.top()] >= heights[i]){
-					// compute area for the current building
-					idx = buildings.top();
-					buildings.pop();
-					// area of largest rectangle supported by this building
-					curr_area = heights[idx] * (i - (buildings.empty() ? 0 : buildings.top()));
-					
-					if(curr_area > max_area){
-						cout << idx << " " << i << " " << curr_area <<" "<< heights[idx] << " "<<(i - (buildings.empty() ? 0 : buildings.top()))<<endl;
-						max_area = curr_area;
-					}
+		else if(heights[buildings.top()] >= heights[i]){	// when the current height is shorter
+			
+			// pop the buildings and at the same time compute the largest area for each
+			while(!buildings.empty() && heights[buildings.top()] >= heights[i]){
+				// compute area for the current building
+				idx = buildings.top();
+				buildings.pop();
+				// area of largest rectangle supported by this building
+				curr_area = heights[idx] * (i - (buildings.empty() ? 0 : buildings.top()+1));
+				if(curr_area > max_area){
+					max_area = curr_area;
 				}
-				
-				// push the current building
-				buildings.push(i);
 			}
+			
+			// push the current building
+			buildings.push(i);
 		}
 	}
 	
-	// handle the last building
-	heights[heights.size() - 1] = heights[heights.size()-1] * (heights.size()-1 - (buildings.empty() ? 0 : buildings.top()));
-	if(heights[heights.size() - 1] > max_area)
-			max_area = heights[heights.size() - 1];
-			
+	// area for the remaining buildings
+	while(!buildings.empty()){
+		idx = buildings.top();
+		buildings.pop();
+		
+		curr_area = heights[idx] * (idx + 1 - (buildings.empty() ? 0 : buildings.top()+1));
+		if(curr_area > max_area)
+			max_area = curr_area;
+	}
+	
 	return max_area;
 }
 
 int main() {
-	vector<int> heights = {1,4,2,5,6,3,2,6,6,5,2,1,3};
+	vector<int> heights = {1,14,32,54,6,3,42,6,9,2,1,3};
 	
 	cout << findLargestRectangle(heights);
 	return 0;
