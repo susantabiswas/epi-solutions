@@ -55,7 +55,7 @@ int doFindFirstOccurrence(vector<int>& arr, int& target, int l, int h){
 int findFirstOccurrence(vector<int>& arr, int target){
     // find the lower and upper limit
     int l = 0;
-    int h = arr.size();
+    int h = arr.size()-1;
 
      return doFindFirstOccurrence(arr, target, l, h);
 }
