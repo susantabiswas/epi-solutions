@@ -1,15 +1,3 @@
-/*
-	Given an integer, find its integer square root. Answer will be the largest number whose
-	square is atleast equal or lesser than given number
-	
-	Input: int
-	Output: int
-	
-	Solution:
-		We can use binary search for this. Here the lower limit will be 0 and upper will
-		be num/2. Then we search for the square root.
-		TC: O(logn)
-*/
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -17,7 +5,7 @@ using namespace std;
 // finds the integer square root
 int findIntegerSquareRoot(int n){
 	// lower and upper limits
-	int left = 0, right = n/2;
+	int left = 0, right = n;
 	// for keeping track of middle number
 	int middle = 0;
 	int sq_val = 0;
@@ -47,7 +35,7 @@ int findIntegerSquareRoot(int n){
 }
 
 int main() {
-	int num = 3;
+	int num = 1;
 	cout << findIntegerSquareRoot(num);
 	return 0;
 }
