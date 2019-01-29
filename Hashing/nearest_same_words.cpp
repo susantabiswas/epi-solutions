@@ -21,7 +21,7 @@
 using namespace std;
 
 // finds the closest distance between same words
-int findClosesWordsDistance(const vector<string>& arr) {
+int findClosestWordsDistance(const vector<string>& arr) {
 	int closest_dist = numeric_limits<int>::max();
 
 	// stores the last known index of words
@@ -40,6 +40,6 @@ int findClosesWordsDistance(const vector<string>& arr) {
 
 int main() {
 	vector<string> arr = {"I", "apple", "banana", "was", "apple", "orange", "apple", "banana"};	
-	cout << findClosesWordsDistance(arr);
+	cout << findClosestWordsDistance(arr);
 	return 0;
 }
