@@ -55,7 +55,6 @@ pair<int, int> smallestSubarrayWithKeywords(vector<string>& arr,
 		// check if all the keywords have been covered or not, if they have been covered then just
 		// just move the left index till again they are not covered
 		while(num_keywords_cover == 0) {
-
 			// check if the current sub array is min
 			if((keywords_subarray.first == -1 && keywords_subarray.second == -1 ) || 
 					abs(right - left) < abs(keywords_subarray.second - keywords_subarray.first)) {
@@ -64,7 +63,7 @@ pair<int, int> smallestSubarrayWithKeywords(vector<string>& arr,
 				keywords_subarray.second = right;
 			}
 			// check if the current keyword is extra or not
-			if(keywords.count(arr[right]) && ++keyword_freq[arr[left]] > 0) {
+			if(keywords.count(arr[left]) && ++keyword_freq[arr[left]] > 0) {
 				++num_keywords_cover;
 			}
 			// move left index
@@ -77,7 +76,7 @@ pair<int, int> smallestSubarrayWithKeywords(vector<string>& arr,
 
 
 int main() {
-	vector<string> arr = {"I", "apple", "banana", "was", "apple", "orange", "apple", "banana", "new",
+	vector<string> arr = {"I", "apple", "kiwi", "banana", "was", "apple", "orange", "apple", "banana", "new",
 						"new", "new"};
 	unordered_set<string> keywords = {"banana", "apple"};
 	
