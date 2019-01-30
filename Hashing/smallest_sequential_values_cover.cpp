@@ -28,7 +28,7 @@
 using namespace std;
 
 // finds the index of smallest subarray which contains the given set of keywords sequentially
-pair<int, int> smallestSequentialSubarrayWithKeywords(vector<int>& arr, 
+pair<int, int> smallestSequentialSubarrayWithKeywords(vector<string>& arr, 
 										const vector<string>& keywords) {
 	// for storing the keyword with their index
 	unordered_map<string, int> keyword_idx; 
@@ -63,7 +63,7 @@ pair<int, int> smallestSequentialSubarrayWithKeywords(vector<int>& arr,
 				smallest_subarray_length[idx] = smallest_subarray_length[idx-1] +
 												i - latest_occurrence[idx-1];
 			}
-			else if (idx == keyword.size() - 1) {	// if it is the last keyword, check if subarray length is global min or not
+			else if (idx == keywords.size() - 1) {	// if it is the last keyword, check if subarray length is global min or not
 				if(smallest_subarray_length[idx] < global_smallest_subarray_length) {
 					global_smallest_subarray_length = smallest_subarray_length[idx];
 					keywords_subarray = {latest_occurrence[0], idx};
@@ -71,7 +71,7 @@ pair<int, int> smallestSequentialSubarrayWithKeywords(vector<int>& arr,
 			}
 
 			// set the lastest occurrence
-			lastest_occurrence[idx] = i;
+			latest_occurrence[idx] = i;
 		}
 	}	
 
