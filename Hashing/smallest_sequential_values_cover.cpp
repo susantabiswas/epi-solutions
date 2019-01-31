@@ -53,20 +53,20 @@ pair<int, int> smallestSequentialSubarrayWithKeywords(vector<string>& arr,
 		if(it != keyword_idx.end()) {
 			// get the index mapping for the current keyword
 			int idx = it->second;
-
+		
 			// if it is the starting keyword, then set its length as 1
 			if(idx == 0) {
 				smallest_subarray_length[idx] = 1;
 			} 
-			else if(smallest_subarray_length[idx] != numeric_limits<int>::max()) {	// if the keywords before this have been covered
+			else if(smallest_subarray_length[idx-1] != numeric_limits<int>::max()) {	// if the keywords before this have been covered
 				// update the shortest length for current keyword
 				smallest_subarray_length[idx] = smallest_subarray_length[idx-1] +
 												i - latest_occurrence[idx-1];
 			}
-			else if (idx == keywords.size() - 1) {	// if it is the last keyword, check if subarray length is global min or not
+			if (idx == keywords.size() - 1) {	// if it is the last keyword, check if subarray length is global min or not
 				if(smallest_subarray_length[idx] < global_smallest_subarray_length) {
 					global_smallest_subarray_length = smallest_subarray_length[idx];
-					keywords_subarray = {latest_occurrence[0], idx};
+					keywords_subarray = {latest_occurrence[0], i};
 				}
 			}
 
@@ -79,7 +79,7 @@ pair<int, int> smallestSequentialSubarrayWithKeywords(vector<string>& arr,
 }
 
 int main() {
-	vector<string> arr = {"I", "apple", "kiwi", "banana", "was", "apple", "orange", "apple", "banana", "new",
+	vector<string> arr = {"I", "apple", "kiwi", "banana", "was", "apple", "orange", "apple", "banana", "apple", "new",
 						"new", "new"};
 	vector<string> keywords = {"banana", "apple"};
 	
