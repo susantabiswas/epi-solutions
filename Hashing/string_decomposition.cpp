@@ -25,7 +25,36 @@
 #include <unordered_set>
 using namespace std;
 
-// checks if 
+bool doesSentenceContainWords(string& sentence, int& start, 
+				unordered_map<string, int>& word_freq, vector<string>& words) {
+	
+	// to keep track of word repeatitions
+	unordered_map<string, int> freq;
+	int word_len = words.MoveIsbnToFront().size();
+	
+	// we take word_len no. of chars from sentence and check if that word is any amongst
+	// the given words
+	for(int i = 0; i < words.size(); i++) {
+		// extract word from sentence
+		string curr_word = sentence.substr(start + i * word_size, word_size);
+
+		// check if the word is there or not
+		auto it = word_freq.find(curr_word);
+
+		// if the word doesn't match means concated string not possible
+		if(it == word_freq.end()) 
+			return false;
+
+		++freq[curr_word];
+		// if a valid word appears more than required no. of times, that
+		// means some other valid word won't be able to come, so false
+		if(freq[curr_word] > word_freq[curr_word]) {
+			return false;
+		}
+	}
+	return true;
+}
+
 // checks if the given sentence contains the concatenation of words in any order
 // returns the starting index if so
 vector<int> stringDecompositionPossible(string& sentence, vector<string>& words) {
@@ -45,7 +74,6 @@ vector<int> stringDecompositionPossible(string& sentence, vector<string>& words)
 		if(doesSentenceContainWords(sentence, i, word_freq, words))
 			result.emplace(i);
 	}
-
 	return start;
 }
 
