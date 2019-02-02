@@ -1,4 +1,4 @@
-﻿/*	
+/*	
 	Given 'n', find the nth fibonacci number.
 
 	Input: int
