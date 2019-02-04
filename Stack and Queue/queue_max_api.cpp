@@ -15,7 +15,7 @@
 		For Max:
 			return front of tracker queue
 			
-		TC: enqueue: O(1)
+		TC: enqueue: O(n), for 'n' enqueue operations
 			dequeue: O(1)
 			max: O(1)
 		SC: O(n), n: no. of elements, required for tracking max element 
