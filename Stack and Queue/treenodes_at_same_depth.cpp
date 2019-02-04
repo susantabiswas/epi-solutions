@@ -66,9 +66,9 @@ vector<list<int>> printNodesAtSameLevel(Node* root) {
 			q.emplace(curr->right);
 		// when all the nodes of current level have been visited
 		if(!num_nodes) {
-			tree_nodes.emplace_back(l);
-			// erase the temporary elements of list
-			l.erase(l.begin(), l.end());
+			// move all the current level nodes
+			tree_nodes.emplace_back(move(l));
+			
 			//set the no. of nodes for next level
 			num_nodes = q.size();
 		}
