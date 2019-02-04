@@ -46,7 +46,10 @@ class Queue {
 					dequeue_.emplace(data);
 				}
 			}
-
+			
+			if(dequeue_.empty()) 
+				throw length_error("Queue is empty");
+			
 			T popped_data = dequeue_.top();
 			dequeue_.pop();
 			return popped_data;
@@ -66,7 +69,7 @@ int main() {
 	
 	while(!queue.Empty()) {
 		cout << queue.Dequeue() << " ";
-	}
+	}cout << queue.Dequeue() << " ";
 	return 0;
 }
  
