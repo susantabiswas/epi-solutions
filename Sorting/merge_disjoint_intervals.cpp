@@ -1,5 +1,5 @@
 /* 
-	Given a array of intervals {start_time, end_time}, each interval is disjoint with the other. Given an input interval,
+	Given an array of intervals {start_time, end_time}, each interval is disjoint with the other. Given an input interval,
 	return the update disjoint set of intervals. eg: <1,4>, <5,6>, <7,8> and input:<2,6>: <1,6>, <7,8>
 	The array is sorted acc to starting time of each interval
 
