@@ -1,5 +1,5 @@
 /* 
-	Given a array of intervals {start_time, end_time}, find the maximum no. of events that are
+	Given an array of intervals {start_time, end_time}, find the maximum no. of events that are
 	happening concurrently.
 
 	Input: array of intervals
