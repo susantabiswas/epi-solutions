@@ -57,9 +57,9 @@ public:
         // start percolating down
         for (int i = (num_heap_elements_ - 1) / 2; i >= 0; i--) {
             if (heap_type_ == MAX_HEAP)
-                percolateDown(i, comp_greater);
+                heapifyDown(i, comp_greater);
             else if (heap_type_ == MIN_HEAP)
-                percolateDown(i, comp_less);
+                heapifyDown(i, comp_less);
         }
     }
 
@@ -84,7 +84,7 @@ public:
         }
 
         // add the element at last
-        // then percolate from there to all the way up
+        // then heapify from there to all the way up
         ++num_heap_elements_;
         heap_[num_heap_elements_ - 1] = data;
 
@@ -113,7 +113,7 @@ public:
         Heap deletion: only the root element is deleted.
         We swap the root element with last element in vector, then make the
         heap size reduced by 1. Then to fix the distruption caused by
-        swapping we percolate from root
+        swapping we heapify from root
     */
     T Pop() {
         // check if heap is empty or not
@@ -127,11 +127,11 @@ public:
         // decrease the heap elements count by 1
         --num_heap_elements_;
 
-        // percolate down to ensure heap property is maintained
+        // heapify down to ensure heap property is maintained
         if (heap_type_ == MAX_HEAP)
-            percolateDown(0, greater<T>());
+            heapifyDown(0, greater<T>());
         else if (heap_type_ == MIN_HEAP)
-            percolateDown(0, less<T>());
+            heapifyDown(0, less<T>());
 
         return popped_data;
     }
@@ -177,10 +177,10 @@ public:
         check if the left or right child of current index is greater in
         case of max-heap or smaller in case of min-heap.
         If that is the case then to fix the heap property we swap that element
-         with current parent, and then percolate from that index
+         with current parent, and then heapify from that index
     */
     template<typename Compare>
-    void percolateDown(int idx, Compare comp) {
+    void heapifyDown(int idx, Compare comp) {
         // assume that current parent is saisfying heap property
         // for max heap: this will contain greatest amongst parent, left and right child
         // for min_heap: this will comtain min amongst parent, left and right child
@@ -205,7 +205,7 @@ public:
         if (heap_prop_idx != idx) {
             swap(heap_[heap_prop_idx], heap_[idx]);
             // fix the lower subtrees
-            percolateDown(heap_prop_idx, comp);
+            heapifyDown(heap_prop_idx, comp);
         }
     }
 
