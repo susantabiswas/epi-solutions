@@ -55,15 +55,12 @@ class Heap{
 			// now heapify the vector, starting with the first non-leaf node
 			// since leaf nodes always satisfy heap property
 			// start percolating down
-			for(int i = (num_heap_elements_ - 1) / 2; i >= 0; i--)
+			for(int i = (num_heap_elements_ - 1) / 2; i >= 0; i--) {
 				if(heap_type_ == MAX_HEAP)
 					percolateDown(i, comp_greater);
 				else if(heap_type_ == MIN_HEAP)
 					percolateDown(i, comp_less);
-					
-			for(const auto& a: heap_)
-				cout << a <<" ";
-				cout <<endl;
+			}
 		}
 		
 		// Constructor
@@ -79,17 +76,59 @@ class Heap{
 		}
 
 		// for pushing element to heap
-		void Push() {
+		void Push(T data) {
 			// when heap is full
 			if(num_heap_elements_ == capacity_) {
 				// resize the vector for heap
 				resizeHeap();
 			}
+			
+			// add the element at last
+			// then percolate from there to all the way up
+			heap_.emplace_back(data);
+			++num_heap_elements_;
+			
+			/*// set the comparator acc. to heap type
+			if(heap_type_ == MAX_HEAP)
+				comp_greater = greater<T>();
+			else if (heap_type_ == MIN_HEAP)
+				 comp_less = less<T>();
+					
+			int i = num_heap_elements_ - 1;
+			// when max-heap
+			while( i != 0 && comp_greater()) {
+				
+			}
+			
+			// when*/
 		}
 
 		// for deleting element from heap
+		/*
+			Heap deletion: only the root element is deleted.
+			We swap the root element with last element in vector, then make the 
+			heap size reduced by 1. Then to fix the distruption caused by
+			swapping we percolate from root 
+		*/
 		T Pop() {
-
+			// check if heap is empty or not
+			if(isEmpty())
+				throw length_error("Heap is empty");
+			
+			// swap the first with last 
+			swap(heap_[0], heap_[num_heap_elements_ - 1]);
+			
+			T popped_data = heap_[num_heap_elements_ - 1];
+			// decrease the heap elements count by 1
+			--num_heap_elements_;
+			
+			// percolate down to ensure heap property is maintained
+			if(heap_type_ == MAX_HEAP)
+				percolateDown(0, greater<T>());
+			else if(heap_type_ == MIN_HEAP)
+				percolateDown(0, less<T>());
+		
+			return popped_data;
 		}
 
 		// get the root element of heap
@@ -176,13 +215,24 @@ class Heap{
 		vector<T> heapSort() {
 
 		}
+		
+		// shows heap array elements
+		void showHeapArray() {
+			for(const T& a: heap_)
+				cout << a << " ";
+			cout << endl;
+		}
 };
 
 
 int main() {
 	// 562, 300, 400, 29, 200, 360, 10, 4
 	vector<int> arr = {562, 300, 10, 200, 29, 360, 4, 400};
-	HeapType type = MIN_HEAP;
+	HeapType type = MAX_HEAP;
 	Heap<int> heap(arr, type);
+	cout << heap.Pop() << endl;
+	heap.showHeapArray();
+	heap.Push(21323);
+	heap.showHeapArray();
 	return 0;
 }
