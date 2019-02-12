@@ -8,6 +8,8 @@
 
     Solution:
         If need to check from each location whether starting there will help us find the pattern or not.
+        We cache the failed matching attempt from (i, j) for some pattern[offset] some time in past or not.
+        
             TC: O(nms) 
             Sc: O(nms)
             n: no. of rows, m: no. of cols, s: pattern string length
@@ -20,7 +22,7 @@
 using namespace std;
 
 struct HashTupleElement {
-    bool operator(const tuple<int, int, int>& el) const {
+    bool operator()(const tuple<int, int, int>& el) const {
         // hash for the tuple element
         return hash<int>()(get<0>(el) ^ get<1>(el) * 1021 ^ get<2>(el) * 1048573);
     }
@@ -49,12 +51,12 @@ bool isPatternContainedStartingThis(vector<int>& pattern, int offset,
             return true;
     }
     // add the current attemp as failed
-    grid_attempts.emplace({i, j, offset});
+    grid_attempts.emplace(i, j, offset);
     return false;
 }
 
 // checks if a matrix contains a 1d pattern or not
-bool isPatternContained(vector<int> pattern, vector<vector<int>> matrix) {
+bool isPatternContained(vector<int>& pattern, vector<vector<int>>& matrix) {
     // contains the failed attempts for a location and the 
     // pattern offset
     unordered_set<tuple<int, int, int>, HashTupleElement> grid_attempts;
@@ -70,6 +72,15 @@ bool isPatternContained(vector<int> pattern, vector<vector<int>> matrix) {
 }
 
 int main() {
-
+	// grid
+	vector<vector<int>> grid = {{1, 2, 3},
+								{4, 3, 4},
+								{7, 8, 9},
+								{10, 11, 12}
+							};
+	// pattern
+	vector<int> pattern = {2, 3, 4, 7, 10};
+	
+	cout << isPatternContained(pattern, grid);
     return 0;
 }
