@@ -19,49 +19,48 @@
 #include <vector>
 using namespace std;
 
-// using memoization
-// TC: O(nk)
-// SC: O(nk), since we are using a 2d array
-int waysToClimbStairsHelperMemoization(int n, int k, vector<vector<int>>& cache) {
-	if(n == 0)
-		return 1;
 
-	// if cache value is available 
-	if(cache[n][k] != 0)
-		return cache[n][k];
-	
-	// if current step is larger
-	if(k > n)
-		return cache[n][k] = waysToClimbStairsHelperMemoization(n, k - 1, cache);
-
-	for(int i = 1; i <= k; i++)
-		cache[n][k] += waysToClimbStairsHelperMemoization(n - i, i, cache);
-	return cache[n][k];
-}
-
-int waysToClimbStairsMemoization(int n, int k) {
+/*int waysToClimbStairsMemoization(int n, int k) {
 	// each row indicates that we are using all the steps till that
 	// eg: row 2 means using steps of 1 and 2.
-	vector<vector<int>> cache(k+1, vector<int>(n + 1, 0));
-	return waysToClimbStairsHelperMemoization(n, k, cache);
-}
+	vector<vector<int>> cache(k + 1, vector<int>(n + 1, 0));
+	
+	// ways to climb stairs using the max no. of 'k' stairs
+	for(int i = 1; i <= k; i++) {
+		// zero steps can always be acheived
+		cache[i][0] = 1;
+		
+		for(int j = 1; j <= n; j++) {
+			// 'j' steps can be reached by either including current
+			// no. of steps or by not taking it
+			int include_step = i <= j ? cache[i][j - i] : 0;
+			int exclude_step = i >= 1 ? cache[i - 1][j] : 0;
+			
+			cache[i][j] = include_step + exclude_step;
+		}	
+	}
+	
+	for(auto arr: cache){
+		for(auto a: arr)
+			cout<<a <<" ";
+		cout << endl;
+	}
+	return cache.back().back();
+}*/
 
-// finds the number of ways in which 'k' steps can be climbed
+// finds the number of ways in which 'n' steps can be climbed using max of 'k' steps
 int waysToClimbStairsTabulationHelper(int n, int k, vector<int>& steps_ways) {
 	// when we have reached
 	if(n == 0)
 		return 1;
-	
-	// if the value is already cached then return
-	if(steps_ways[n] != 0)
-		return steps_ways[n][k] = steps_ways[n];
-	
-	// if current step value is greater than the no. of steps left to climb
-	if(k > n)
-		return waysToClimbStairsTabulationHelper(n, k-1, steps_ways);
-
-	for(int i = 1; i <= k; i++) {
-		steps_ways[n] += waysToClimbStairsTabulationHelper(n - i, i, steps_ways);
+	if(k <= 0)
+		return 0;
+		
+	if(steps_ways[n] == 0) {
+		// for each target, find the no. of steps required starting from bottom 
+		for(int i = 1; i <= k && (n - i) >= 0; i++) {
+			steps_ways[n] += waysToClimbStairsTabulationHelper(n - i, k, steps_ways);
+		}
 	}
 
 	return steps_ways[n];
@@ -72,13 +71,22 @@ int waysToClimbStairsTabulation(int n, int k) {
 	// steps_ways[i] = summation(n - i) for all 1 <= i <= k
 	vector<int> steps_ways(n + 1, 0);
 
-	return waysToClimbStairsTabulationHelper(n, k, steps_ways);
+	int ways = waysToClimbStairsTabulationHelper(n, k, steps_ways);
+	
+	for(auto arr: steps_ways)
+			cout<<arr <<" ";
+		cout << endl;
+	
+	
+	return ways;
 }
 
 int main() {
-	int n = ;
-	int k = ;
+	int n = 4;
+	int k = 2;
 
 	cout << waysToClimbStairsTabulation(n, k);	
+
+//	cout << endl << waysToClimbStairsMemoization(n, k);
 	return 0;
 }
