@@ -25,33 +25,39 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 // helper for the finding the levenshtein distance using memoization
-int minLevenshteinDistanceHelper(string a, int n, string b, int m,
+int minLevenshteinDistanceHelper(string a, int a_idx, string b, int b_idx,
                             vector<vector<int>>& cache) {
     // if string 'a' has finished, remaining chars of 'b' needs
     // to be inserted
-    if(n == 0)
-        return m;
+    if(a_idx < 0 && b_idx >= 0)
+        return b_idx + 1;
     // if string 'b' has finsihed, then remaining 'a' chars needs
     // to deleted
-    if(m == 0)
-        return n;
-
+    if(b_idx < 0 && a_idx >= 0)
+        return a_idx + 1;
+	// if both are finished, then no edits are required
+	if(a_idx < 0 && b_idx < 0)
+		return 0;
+		
     // if current chars of both the strings are same, then check the
     // next string
-    if(a[n-1] == b[m-1])
-        return cache[n-1][m-1] = minLevenshteinDistanceHelper(a, n-1, b, m-1, cache);
+    if(a[a_idx] == b[b_idx])
+        return cache[a_idx][b_idx] = minLevenshteinDistanceHelper(a, a_idx - 1, b, b_idx - 1, cache);
 
-    if(cache[n-1][m-1] == -1) {
-        cache[n-1][m-1] = 1 + min({ minLevenshteinDistanceHelper(a, n-1, b, m-1, cache), // substitution
-                                    minLevenshteinDistanceHelper(a, n-1, b, m, cache),  // deletion
-                                    minLevenshteinDistanceHelper(a, n, b, m-1, cache)  // insertion
-        });
+    if(cache[a_idx][b_idx] == 0) {
+    	int substitute_op = minLevenshteinDistanceHelper(a, a_idx -1, b, b_idx -1, cache);
+        int delete_op = minLevenshteinDistanceHelper(a, a_idx - 1, b, b_idx, cache);  
+        int insert_op = minLevenshteinDistanceHelper(a, a_idx, b, b_idx - 1, cache); 
+        
+        cache[a_idx][b_idx] = 1 + min({substitute_op, delete_op, insert_op});
+        
     }
     
-    return cache[n - 1][m - 1];
+    return cache[a_idx][b_idx];
 }
 
 // finds the min levenshtein distance between two strings 
@@ -59,12 +65,13 @@ int minLevenshteinDistanceHelper(string a, int n, string b, int m,
 int minLevenshteinDistance(string a, string b) {
     // for caching the intermediate results
     // each entry 'i' and 'j' stores min levenshtein distance till that index
-    vector<vector<int>> cache(a.size(), vector<int>(b.size(), -1));
+    vector<vector<int>> cache(a.size(), vector<int>(b.size(), 0));
 
-    return minLevenshteinDistanceHelper(a, a.size(), b, b.size(), cache);
+    return minLevenshteinDistanceHelper(a, a.size() - 1, b, b.size() - 1, cache);
 }
 
 
 int main() {
+	cout << minLevenshteinDistance("aab", "a");
     return 0;
 }
