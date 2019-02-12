@@ -23,7 +23,7 @@
 #include <vector>
 using namespace std;
 
-int findBinomialCoefficientHelper(int n, int k, vector<int>& coefficient) {
+int findBinomialCoefficientHelper(int n, int k, vector<vector<int>>& coefficient) {
     // base case
     if(k == 0 || n == k)
         return 1;
@@ -36,16 +36,16 @@ int findBinomialCoefficientHelper(int n, int k, vector<int>& coefficient) {
 }
 
 // finds the binomial coefficient 
-int findBinomialCoefficient(int n, int k) {
+int computeBinomialCoefficient(int n, int k) {
     // each (n,k) entry stores the binomial coefficient for that
     vector<vector<int>> coefficient(n+1, vector<int>(k+1, 0));
 
-    return findBinomialCoefficient(n, k, coefficient);
+    return findBinomialCoefficientHelper(n, k, coefficient);
 }
 
 int main() {
-    int n = ;
-    int k = ;
+    int n = 5;
+    int k = 5;
 
     cout << computeBinomialCoefficient(n, k);
     return 0;
