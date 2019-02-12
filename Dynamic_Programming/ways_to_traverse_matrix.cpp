@@ -28,7 +28,7 @@ int waysToReachMatrixEndHelper(int n, int m, vector<vector<int>>& ways_to_reach)
     if(n == 0 && m == 0)
         return 1;
     
-    if(cache[n][m] == 0) {
+    if(ways_to_reach[n][m] == 0) {
         // check the no. of ways the left and top locations can be reached.
         // Also it is checked if it is the top row or first column or not
 
@@ -37,10 +37,10 @@ int waysToReachMatrixEndHelper(int n, int m, vector<vector<int>>& ways_to_reach)
         // ways to reach the top location
         int reach_top = n == 0 ? 0 : waysToReachMatrixEndHelper(n-1, m, ways_to_reach);
 
-        cache[n][m] = reach_left + reach_top;
+        ways_to_reach[n][m] = reach_left + reach_top;
     }
 
-    return cache[n][m];
+    return ways_to_reach[n][m];
 }
 
 int waysToReachMatrixEndHelper(int n, int m) {
@@ -51,5 +51,7 @@ int waysToReachMatrixEndHelper(int n, int m) {
 }
 
 int main() {
+	vector<vector<int>> matrix(5, vector<int>(5, 1));
+	cout << waysToReachMatrixEndHelper(matrix.size(), matrix[0].size());
     return 0;
 }
