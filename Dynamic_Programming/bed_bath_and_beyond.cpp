@@ -48,7 +48,7 @@ vector<string> canStringBeDecomposed(string str, unordered_set<string>& dict) {
            for(int j = 0; j < i; j++) {
                // if a word is found
                if(word_ending_length[j] != -1) {
-                   if(str.substr(j+1, i - j) != dict.end()) {
+                   if(dict.find(str.substr(j+1, i - j)) != dict.end()) {
                        word_ending_length[i] = i - j;
                        break;
                    }
@@ -75,6 +75,12 @@ vector<string> canStringBeDecomposed(string str, unordered_set<string>& dict) {
     return words;
 }
 
+ostream& operator<<(ostream& out, vector<string> arr) {
+	for(const auto& a: arr)
+		cout << a <<" ";
+	cout << endl;
+}
+
 int main() {
     unordered_set<string> dict = {"mobile","samsung","sam","sung", 
                             "man","mango","icecream","and", 
@@ -82,6 +88,6 @@ int main() {
                              "painting", "park", "lake"};
     string str = "ilikepainting";
 
-    cout << canStringBeDecomposed();    
+    cout << canStringBeDecomposed(str, dict);    
     return 0;
 }
