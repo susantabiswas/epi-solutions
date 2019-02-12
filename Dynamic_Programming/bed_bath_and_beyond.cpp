@@ -5,7 +5,6 @@
     
         Input: set of strings, single string
         Output: vector of decomposed words
-
     Solution:
         We use a 1d array storing the length of the word ending at that index. Initially every entry is -1.
         We start traversal through the given string and for each i < n,
@@ -28,12 +27,24 @@
 #include <unordered_set>
 using namespace std;
 
+// finds the longest length of dict word
+int longestDictWordLength(unordered_set<string>& dict) {
+	int max_length = 0;
+	for(const auto& word: dict) {
+		int len = word.size();
+		max_length = max(max_length, len);
+	}
+	return max_length;
+}
 
 // checks if a string can be decomposed in terms of given dictionary words
 vector<string> canStringBeDecomposed(string str, unordered_set<string>& dict) {
     // each entry stores the length of the word ending at that index starting (0, i)
     vector<int> word_ending_length(str.size(), -1);
-
+	
+	// get the length of longest word
+	int longest_word_len = longestDictWordLength(dict);
+	
    // traverse through the string and keep checking if the subtring is a dict string 
    for(int i = 0; i < str.size(); i++) {
        // if the current substring exists in dict
@@ -45,7 +56,21 @@ vector<string> canStringBeDecomposed(string str, unordered_set<string>& dict) {
        // check if there is any starting point after 0 from 
        // where a valid word can be formed
        if(word_ending_length[i] == -1) {
-           for(int j = 0; j < i; j++) {
+	      
+           /*for(int j = 0; j < i; j++) {    // TC: O(n^2)
+               // if a word is found
+               if(word_ending_length[j] != -1) {
+                   if(dict.find(str.substr(j+1, i - j)) != dict.end()) {
+                       word_ending_length[i] = i - j;
+                       break;
+                   }
+               }
+            }*/
+            // TC: O(W^2), since this loop run for W length
+	    // if there really is a word, then at max it can be longest_word_len
+	    // back from 'i'
+            int j = i - longest_word_len >= 0 ? i - longest_word_len : 0;
+            for(; j < i; j++) {
                // if a word is found
                if(word_ending_length[j] != -1) {
                    if(dict.find(str.substr(j+1, i - j)) != dict.end()) {
@@ -64,9 +89,8 @@ vector<string> canStringBeDecomposed(string str, unordered_set<string>& dict) {
 
     // get the individual words from string
     vector<string> words;
-    int word_idx = word_ending_length[str.size() - 1];
-    int remaining_chars = str.size();
-    while(remaining_chars >= 0) {
+    int word_idx = str.size() - 1;
+    while(word_idx >= 0) {
         string word = str.substr(word_idx + 1 - word_ending_length[word_idx], word_ending_length[word_idx]);
         words.emplace_back(word);
         word_idx = word_idx - word_ending_length[word_idx];
