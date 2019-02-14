@@ -9,8 +9,8 @@
         The constraints for a sudoku:
         Entries should be [1, 9]
         There should be unique entries in each row, column and in each smaller grid  
-        TC: O(nm), n: no. of rows and m: no. of columns
-        SC: O(nm)
+        TC: O(n^n), n: no. of rows and m: no. of columns
+        SC: O(n)
 */
 
 #include <iostream>
