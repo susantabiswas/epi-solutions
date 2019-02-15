@@ -23,11 +23,12 @@ int maximizeBuyOnceStockProfit(vector<int>& prices) {
     int min_till_this = 0;
     
     for(int i = 0; i < prices.size(); i++) {
+        // check if the current stock price is min, if this is updated then
+        // if the current is min so far, diff will be negative and misleading
+        min_till_this = prices[min_till_this] > prices[i] ? i : min_till_this;
         // compute the diff with the min price seen so far
         curr_diff = prices[i] - prices[min_till_this];
         max_profit = max(max_profit, curr_diff);
-        // check if the current stock price is min
-        min_till_this = prices[min_till_this] > prices[i] ? i : min_till_this;
     }
     return max_profit;
 }
