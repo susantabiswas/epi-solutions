@@ -54,7 +54,7 @@ vector<Colors> partitionDutchFlagColors(int pivot_idx, vector<Colors> arr) {
         	// equal is not incremented because we are not sure what element will come
         	// after swapping at equal index, but larger is decremented since it is sure it will get
         	// a larger element
-            swap(arr[equal], arr[larger--]);
+            swap(arr[equal], arr[--larger]);
         }
     }
     return arr;
