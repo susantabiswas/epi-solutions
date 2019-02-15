@@ -10,7 +10,8 @@
         We maintain three indices which contains three ranges:
         1. smaller than pivot: [0 : smaller - 1]
         2. equal to pivot: [smaller : equal - 1]
-        3. larger than pivot: [equal : SIZE_N]
+        3. Unclassified: [equal: larger - 1]
+        4. larger than pivot: [larger : SIZE_N - 1]
 
         Now let the three indices be small, equal and large. Initially small and equal are at 0.
         We use equal index for traversal. Whenever an element is encountered which is smaller than 
@@ -35,7 +36,8 @@ vector<Colors> partitionDutchFlagColors(int pivot_idx, vector<Colors> arr) {
     /*
         1. smaller than pivot: [0 : smaller - 1]
         2. equal to pivot: [smaller : equal - 1]
-        3. larger than pivot: [equal : SIZE_N]
+        3. Unclassified: [equal: larger - 1]
+        4. larger than pivot: [larger : SIZE_N - 1]
     */
     int smaller = 0, equal = 0, larger = arr.size();
 
