@@ -66,16 +66,17 @@ void inOrderTraversal(unique_ptr<Node<T>>& root) {
 
 int main() {
     /*
-                    1
-                  /   \
-                2      3
-               /  \   /
-              4    5  6
+                     1
+                  /    \
+                 2      3
+                / \    /
+               4   5  6
                      /
                     7
     */
     unique_ptr<Node<int>> root = make_unique<Node<int>>(1);
     root->parent = nullptr;
+    
     root->left = make_unique<Node<int>>(2);
     root->left->parent = root.get();
 
@@ -86,13 +87,14 @@ int main() {
     root->left->left->parent = root->left.get();
     
     root->left->right = make_unique<Node<int>>(5);
-    root->left->right->parent = root->right.get();
+    root->left->right->parent = root->left.get();
 
     root->right->left = make_unique<Node<int>>(6);
     root->right->left->parent = root->right.get();
     
     root->right->left->left = make_unique<Node<int>>(7);
     root->right->left->left->parent = root->right->left.get();
+
 
     inOrderTraversal(root);
     cout << endl;
