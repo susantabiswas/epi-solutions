@@ -59,9 +59,9 @@ template<typename T>
 void inOrderTraversal(unique_ptr<Node<T>>& root) {
     if (root) {
         inOrderTraversal(root->left);
-        inOrderTraversal(root->right);
         cout << root->data << " ";
-    }
+        inOrderTraversal(root->right);
+     }
 }
 
 int main() {
