@@ -5,7 +5,7 @@
         We create a list for each penultimate level subtree and then append it to the previous call list.
 
         TC: O(n)
-        Sc: O(h), for recursive stack + hash table
+        Sc: O(h), for recursive stack
 */
 #include <iostream>
 #include <list>
