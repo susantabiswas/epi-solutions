@@ -35,10 +35,22 @@ unique_ptr<Node<int>> buildTreeFromTraversalHelper(vector<int>& inorder, int ino
     if(preorder_s > preorder_e || inorder_s > inorder_e)
         return nullptr;
 
+    // current node data
+    int root_data = preorder[preorder_s];
+    // index of current node in order traversal 
+    int root_idx = inorder_mapping[root_data];
+    // number of nodes in left subtree
+    int num_nodes_left = root_idx - inorder_s;
+    
     // create current node
-    unique_ptr<Node<int>> root = make_unique<Node<int>>(Node<int>(preorder[preorder_s]));
-    root->left = buildTreeFromTraversalHelper(inorder, inorder_mappings);
-    root->right = buildTreeFromTraversalHelper();
+    unique_ptr<Node<int>> root = make_unique<Node<int>>(Node<int>(root_data));
+    root->left = buildTreeFromTraversalHelper(inorder, inorder_s, root_idx - 1, 
+                                              preorder, preorder_s + 1, preorder_s + num_nodes_left,
+                                              inorder_mapping);
+                                              
+    root->right = buildTreeFromTraversalHelper(inorder, root_idx + 1, inorder_e,
+                                               preorder,  preorder_s + num_nodes_left + 1, preorder_e,
+                                               inorder_mapping);
 
     return root;
 }
@@ -61,8 +73,8 @@ template<typename T>
 void inOrderTraversal(unique_ptr<Node<T>>& root) {
     if (root) {
         inOrderTraversal(root->left);
-        inOrderTraversal(root->right);
         cout << root->data << " ";
+        inOrderTraversal(root->right);
     }
 }
 
