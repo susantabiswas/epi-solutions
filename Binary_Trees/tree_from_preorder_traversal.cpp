@@ -7,7 +7,7 @@
         get null, return and then go to right, then again do the same till we get null
 
         TC: O(n)
-        Sc: O(h), for recursive stack + hash table
+        Sc: O(h), for recursive stack
 */
 #include <iostream>
 #include <algorithm>
