@@ -17,8 +17,9 @@
             child nodes, at that time we check if it is in range or not, then for the child nodes we
             update the limits and push alongside them.
 
-        TC: T(n) = 2T(n/2) + O(1) ~ O(n) 
-        Sc: O(n), for n sized array
+        TC: O(n)
+        SC: DFS: O(logn), for n sized array
+	    BFS: O(2^n + 1), last level with leaf nodes
 */
 #include <iostream>
 #include <memory>
