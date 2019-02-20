@@ -18,7 +18,7 @@
             update the limits and push alongside them.
 
         TC: O(n)
-        SC: DFS: O(logn), for n sized array
+        SC: DFS: O(logn)
 	    BFS: O(2^n + 1), last level with leaf nodes
 */
 #include <iostream>
