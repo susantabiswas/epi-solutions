@@ -1,5 +1,5 @@
 /*
-    Given a binary tree and a value K, find the K largest elements.
+    Given a BST and a value K, find the K largest elements.
     
     Solution:
         We start the traversal with right, root and then left approach. This way we will get to the rightmost,
