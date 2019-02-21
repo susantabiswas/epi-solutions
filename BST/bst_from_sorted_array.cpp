@@ -1,5 +1,5 @@
 /*
-    Given a sorted array, construct a binary tree of minimum height.
+    Given a sorted array, construct a BST of minimum height.
     Solution:
         Tree will be of minimum height when the subtrees have comparable number of nodes.
         So each time we can select the middle element of array as the root and recurse on the left and right 
