@@ -1,5 +1,5 @@
 /*
-    Given a binary tree and a key, find the first node whose data value is greater than the key.
+    Given a BST and a key, find the first node whose data value is greater than the key.
     
     Solution:
         Do normal BST search till we get a node > key. Then we find the smallest in its left subtree
