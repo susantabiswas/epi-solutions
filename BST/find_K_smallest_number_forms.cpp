@@ -9,8 +9,8 @@
         To make sure the next value generated is min, we increase 'a' and 'b' by 1.
         We use a BST of size k, every time we extract the min from it and then push
         two values, one with (a + 1, b) and (a, b+1)
-        TC: 
-        SC:  
+        TC: O(klogk),k extractions in BST. Each extraction takes O(logk) in BST of size k.
+        SC:  O(k)
 */
 #include <iostream>
 #include <memory>
