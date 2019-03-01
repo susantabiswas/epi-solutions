@@ -30,11 +30,12 @@ using namespace std;
     For hash function we use the decimal no. formed by the chars mod some prime number
 */
 vector<int> rabinKarp(string& text, string& patt){
-
+    if(patt.size() > text.size())
+           return vector<int>{};
     // base for the 26 alphabatical chars
-    int base = 10;
+    int base = 26;
     // base ^ length of (pattern)
-    long int power_patt = 0;
+    long int power_patt = 1;
     // length of the pattern
     int M = patt.length();
     // length of txt
@@ -43,20 +44,17 @@ vector<int> rabinKarp(string& text, string& patt){
     long int hash_patt = 0;
     // hash value of text
     long int hash_text = 0;
-    // number for doing the mod
-    int q = 101;
+    
     // for storing the matched indices
     vector<int> indices;
 
     // find the hash value of the pattern and the first window of text
     for(int i = 0; i < M; i++){
-        power_patt = power_patt ? base * power_patt:1;
+        power_patt = i ? base * power_patt:1;
         hash_patt = hash_patt * base + patt[i];
         hash_text = hash_text * base + text[i];
     }
-    hash_patt %= q;
-    hash_text %= q;
-
+   
     // traverse through the text using the window
     for(int i = 0; i <= N - M; i++){
         // check if the hash values match
@@ -68,8 +66,8 @@ vector<int> rabinKarp(string& text, string& patt){
         }
 
         // adjust the hash value for the new window
-        hash_text = hash_text - (power_patt * text[i]) % q ;
-        hash_text = (hash_text * base + text[i+M]) ;
+        hash_text = hash_text - (power_patt * text[i]);
+        hash_text = (hash_text * base + text[i + M]) ;
 
     }
 
