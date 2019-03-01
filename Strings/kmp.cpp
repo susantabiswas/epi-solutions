@@ -28,7 +28,7 @@ vector<int> computeLongestProperSuffix(string patt) {
 			if(j != 0) {
 				j = lps[j-1];
 			}
-			else {
+			else if(j == 0) {
 				++i;
 			}
 		}
@@ -49,26 +49,27 @@ vector<int> KMP(string str, string pattern) {
 	vector<int> matches;
 	
 	while(i < str.size()) {
-		// string match found
-		if(j == pattern.size()) {
-			matches.emplace_back(i - j);
-			
-			// decide the position of j to start matching
-			if(j != 0) {
-				j = lps[j-1];
-			}
-			else {
-				++i;
+		if(pattern[j] == str[i]) {
+			++i, ++j;
+			// string match found
+			if(j == pattern.size()) {
+				matches.emplace_back(i - j);
+
+				// decide the position of j to start matching
+				if(j != 0) {
+					j = lps[j-1];
+				}
+				else if(j == 0) {
+					++i;
+				}
 			}
 		}
-		else if(pattern[j] == str[i])
-			++i, ++j;
 		else {	// they don't match
 			// decide the position of j to start matching
 			if(j != 0) {
 				j = lps[j-1];
 			}
-			else {
+			else if(j == 0) {
 				++i;
 			}
 		}
