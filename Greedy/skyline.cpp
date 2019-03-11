@@ -61,7 +61,7 @@ int findLargestRectangle(vector<int> heights){
 		idx = buildings.top();
 		buildings.pop();
 		
-		curr_area = heights[idx] * (idx + 1 - (buildings.empty() ? 0 : buildings.top()+1));
+		curr_area = heights[idx] * (heights.size() - (buildings.empty() ? 0 : buildings.top()+1));
 		if(curr_area > max_area)
 			max_area = curr_area;
 	}
