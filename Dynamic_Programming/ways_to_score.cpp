@@ -6,7 +6,7 @@
 	Output: int
 	
 	Solution:
-        Every similar to climbing stairs problem
+        Very similar to climbing stairs problem
 
         TC: O(sn), s: score and n: no. of play scores
 
