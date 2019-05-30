@@ -11,7 +11,7 @@
         Space Optimization: since half of the numbers are even so we can exclude them and use only n/2 space.
         Now each index i => 2*i + 1, to take it to the next level we can even remove the first 3 numbers 0, 1 and 2.
         That makes each index i => 2*i + 3
-        TC: O(n)
+        TC: O(n*(loglogn))
         Sc: O(n), for saving the numbers 
 */
 
