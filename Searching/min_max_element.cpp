@@ -36,7 +36,8 @@ pair<int, int> findMinMax(vector<int>& arr){
 	} else {
 		curr = make_pair(arr[1], arr[0]);
 	}
-	
+	// initial value for min and max
+	min_max = curr;
 	for(int i = 2; i < arr.size()-1; i += 2){
 		// check which amongst the pair is larger
 		if(arr[i] < arr[i+1]){
