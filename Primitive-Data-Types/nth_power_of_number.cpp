@@ -38,7 +38,7 @@ double findPower(int num, int i){
 }
 
 // finds the nth power of a number recurrsively
-long long findNthPowerRec(int num, int n){
+double findNthPowerRec(int num, int n){
 	// when the number is zero
 	if(num == 0)
 		return 0;
@@ -49,11 +49,12 @@ long long findNthPowerRec(int num, int n){
 	if(n == -1)
 		return 1.0/num;
 	// find the value by making further calls
-	long long val = findNthPowerRec(num, n >> 1);
+	double val = findNthPowerRec(num, n >> 1);
 	// if the last digit is 1, that means the exponent is formed by adding exponent 1, so multiply 
 	// by the number. Eg: 2^(101): 2^(10)*2^(10)*2^(1)
-	if(n & 1)
+	if(n & 1) {
 		return num * val * val;
+	}
 	else{
 		return val* val;
 	}
@@ -87,13 +88,13 @@ double findPower2Iter(double x, long long n){
 
 
 int main(){
-    cout << findPower1(2, 3) << ", " << findPower2Iter(2,3)<< endl;
-    cout << findPower1(2, 4) << ", " << findPower2Iter(2, 4) << endl;
-    cout << findPower1(2, -1) << ", " << findPower2Iter(2, -1) << endl;
-    cout << findPower1(2, -2) << ", " << findPower2Iter(2, -2) << endl;
-    cout << findPower1(3, 2) << ", " << findPower2Iter(3, 2) << endl;
-    cout << findPower1(3, 3) << ", " << findPower2Iter(3, 3) << endl;
-    cout << findPower1(3, -1) << ", " << findPower2Iter(3, -1) << endl; 
+    cout << findPower(2, -3) << ", " << findPower2Iter(2,-3)<< endl;
+    cout << findNthPowerRec(2, 4) << ", " << findPower2Iter(2, 4) << endl;
+    cout << findNthPowerRec(2, -1) << ", " << findPower2Iter(2, -1) << endl;
+    cout << findNthPowerRec(2, -2) << ", " << findPower2Iter(2, -2) << endl;
+    cout << findNthPowerRec(3, 2) << ", " << findPower2Iter(3, 2) << endl;
+    cout << findNthPowerRec(3, 3) << ", " << findPower2Iter(3, 3) << endl;
+    cout << findNthPowerRec(3, -1) << ", " << findPower2Iter(3, -1) << endl; 
 
     return 0;
 }
