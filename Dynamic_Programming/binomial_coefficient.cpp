@@ -6,8 +6,8 @@
     
     Solution:
         The formula for (n, k) =  n! / (n-k)! k!
-        But if we computing the factorial might give us overflow, since the
-        numerator and denominator both might reach values that can be stored in 32bit int.
+        But computing the factorial might give us overflow, since the
+        numerator and denominator both might reach values that can't be stored in 32bit int.
 
         There is another way for (n, k).
         (n, k) = (n-1, k) + (n-1, k-1)

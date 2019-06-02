@@ -1,8 +1,8 @@
 /*
     Buy and sell stock twice:
         Given an array of numbers which represent the stock prices for a day. Find the 
-        max gain that can be made by buying a stock and selling that day itself twice. The 
-        second stock can be bought only when the first is sold.
+        max gain that can be made by buying a stock and selling that and again doing the same.
+	The second stock can be bought only when the first is sold.
 
     Soltuion:
         The gain will be made when the difference between sold and bought stock is maximum. So we need

@@ -6,7 +6,7 @@
 	Output: int
 	
 	Solution:
-        Every similar to climbing stairs problem
+        Very similar to climbing stairs problem
 
         TC: O(sn), s: score and n: no. of play scores
 
@@ -16,7 +16,7 @@
 #include <vector>
 using namespace std;
 
-/*int waysToScoreTabulationHelper(int score, vector<int>& play_scores, 
+/*int waysToScoreMemHelper(int score, vector<int>& play_scores, 
                 vector<int>& cache) {
     // when the score is reached
     if(score == 0)
@@ -26,17 +26,17 @@ using namespace std;
     if(cache[score] == 0) {
         // try all play scores which can help achieve current score
         for(int i = 0; i < play_scores.size() && score - play_scores[i] >= 0; i++) {
-            cache[score] += waysToScoreTabulationHelper(score - play_scores[i], play_scores, cache);
+            cache[score] += waysToScoreMemHelper(score - play_scores[i], play_scores, cache);
         }
     }
     return cache[score];
 }
 
-int waysToScoreTabulation(int score, vector<int> play_scores) {
+int waysToScoreMem(int score, vector<int> play_scores) {
     // each ith entry stores the no. of ways in which that can be
     // acheived 
     vector<int> cache(score + 1, 0);
-    return waysToScoreTabulationHelper(score, play_scores, cache);
+    return waysToScoreMemHelper(score, play_scores, cache);
 }*/
 
 

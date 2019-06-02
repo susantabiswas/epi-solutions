@@ -37,13 +37,24 @@ Node* createNode(const int& data) {
 	}
 }
 
+// shows the linked list
+void showList(Node* head) {
+	while(head) {
+		cout << head->data <<" ";
+		head = head->next;
+	}
+	cout << endl;
+}
+
 // for doing insertion sort of linked list
 // TC: O(n^2)
 Node* insertionSortLinkedList(Node* head) {
 	if(!head || !head->next)
 		return nullptr;
-
-	Node* sorted_head = nullptr;
+	
+	Node* dummy_head = createNode(numeric_limits<int>::min());
+	dummy_head->next = head;
+	
 	Node* nextptr = nullptr;
 	Node* prev = nullptr;
 	Node* unsorted_data = nullptr;
@@ -56,49 +67,41 @@ Node* insertionSortLinkedList(Node* head) {
 		// if current data is greater than next, then fix it
 		// by putting it at its correct position
 		if(curr->data > curr->next->data) {
-			sorted_head = head;
 			// current data which is smaller than its previous data element 
 			unsorted_data = curr->next;
 			// next element of unsorted_data
-			nextptr = curr->next->next;
+			nextptr = unsorted_data->next;
 			
+			prev = dummy_head;
 			// since the list before current is supposed to be sorted,
 			// we go back and look for first element which is greater than this
 			// and put it there
-			while(sorted_head->data < unsorted_data->data) {
-				prev = sorted_head;
-				sorted_head = sorted_head->next;
+			while(prev->next->data < unsorted_data->data) {
+				prev = prev->next;
 			}
 			// place the unsorted_data just before the first bigger element
+			unsorted_data->next = prev->next;
 			prev->next = unsorted_data;
-			unsorted_data->next = sorted_head;
-
-			// make the original element before unsorted_data linked to the next element
+			// update the next pointer of current node
 			curr->next = nextptr;
 		}
-		else {
-			curr = curr->next;
-		}
+
+		// traverse further
+		curr = curr->next;
 	}
+	
+	return dummy_head->next;
 }
 
-// shows the linked list
-void showList(Node* head) {
-	while(head) {
-		cout << head->data <<" ";
-		head = head->next;
-	}
-	cout << endl;
-}
 
 int main() {
 	Node* head = createNode(1);
-	head->next = createNode(2);
+	head->next = createNode(-2);
 	head->next->next = createNode(6);
 	head->next->next->next = createNode(51);
 	head->next->next->next->next = createNode(2);	
 
-	insertionSortLinkedList(head);
+	Node* head = insertionSortLinkedList(head);
 	showList(head);
 	return 0;
 }
