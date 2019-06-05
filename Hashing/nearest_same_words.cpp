@@ -6,9 +6,15 @@
 
 	Solution:
 		Use hash table: key: string, value: index
+		min_dist = INF
 		For each entry in array:
 			if present in hash table:
-
+				dist = compute the distance of current index 'i' with hash table index of same string
+				min_dist = min(min_dist, dist)
+				update index in hash table
+			else:
+				add entry in hash table
+						
 
 		TC: O(n)
 		SC: O(m), m: no. of distinct words
