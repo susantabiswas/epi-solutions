@@ -9,7 +9,7 @@
 		For some index 'i', if we know the length of longest subarray with distinct elements till that index, then
 		for the next index two things can happen:
 		1. Either that is a duplicate:
-				Now if the start index dup free subarray needs to change, since current element is a duplicate and
+				Now the starting index of dup free subarray needs to change, since current element is a duplicate and
 				the longest subarray cannot continue. So to again make the subarray distinct we make the start index
 				the next element of last known index of current duplicate
 
