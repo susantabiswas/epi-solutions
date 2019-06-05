@@ -4,7 +4,7 @@
 
 	Solution:
 		We make a 'n' sized cache, and a queue which contains the ISBN entries. Hash table uses reference to the
-		ISBN entries in queue as key. When an ISBN is looked up we bring the entry in queue to front. 
+		ISBN entries in queue as value and ISBN as key. When an ISBN is looked up we bring the entry in queue to front. 
 		Once the queue has 'n' elements, delete the tail ISBN.
 
 		TC: Hash table Lookup: O(1), queue : O(1)  
