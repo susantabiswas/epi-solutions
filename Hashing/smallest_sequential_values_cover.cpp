@@ -32,7 +32,7 @@ pair<int, int> smallestSequentialSubarrayWithKeywords(vector<string>& arr,
 										const vector<string>& keywords) {
 	// for storing the keyword with their index
 	unordered_map<string, int> keyword_idx; 
-	// for stroing the latest index occurrence
+	// for storing the latest index occurrence
 	vector<int> latest_occurrence(keywords.size(), -1);	
 	// for storing the smallest subarray length covering keywords till index 'i' for each index 'i'  
 	vector<int> smallest_subarray_length(keywords.size(), numeric_limits<int>::max()); 
