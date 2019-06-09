@@ -2,7 +2,7 @@
 	Given an array representing height coordinates and assume their index position
 	as the x-coordinate. Find the pair of heights which makes the largest volume for
 	trapping water inside.
-	Assume the height to be 1 unit.
+	Assume the width to be 1 unit.
 	
 	Input: vector of numbers
 	Output: pair of heights
@@ -20,16 +20,16 @@
 using namespace std;
 
 // finds the maximum volume of water that can be stored 
-int maxWaterVolume(vector<int>& heights){
+int maxWaterVolume(vector<int>& heights) {
 	int max_vol = 0;
 	
 	// we traverse from both ends
 	int i = 0;
 	int j = heights.size() - 1;
 	
-	while(i < j){
+	while(i < j) {
 		// check if the current volume is greater than the max volume
-		if(((j - i) * min(heights[i], heights[j])) >= max_vol){
+		if(((j - i) * min(heights[i], heights[j])) >= max_vol) {
 			max_vol = (j - i) * min(heights[i], heights[j]);
 		}
 		
@@ -38,7 +38,7 @@ int maxWaterVolume(vector<int>& heights){
 			++i;
 		else if(heights[i] > heights[j])// move left	
 			--j;
-		else{
+		else {
 			++i;	// move one step both left and right
 			--j;
 		}
