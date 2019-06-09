@@ -1,6 +1,6 @@
 /*
 	Given a set of tasks with starting and ending time. Each task is represented as [start, end].
-	Now we need to check if the status of each task by visiting it at that time. We can check the
+	Now we need to check the status of each task by visiting it at that time. We can check the
 	status by visiting at any time between the closed interval of that task and also we 
 	can check other tasks lying in that interval. Find the min number of times one should visit
 	so as to cover all tasks.
