@@ -8,7 +8,7 @@
 	Output: Area of largest rectangle
 	
 	Solution:
-		For building 'i' the largest rectangle is the created by buildings of atleast the same height 
+		For building 'i' the largest rectangle is the one created by buildings of atleast the same height 
 		as the current building on either side. So for each building we need to find the blocking
 		building on either sides. 
 		So we use a stack and start traversal, if the stack is empty or the current building
@@ -25,28 +25,28 @@
 using namespace std;
 
 // finds the largest rectangle area
-int findLargestRectangle(vector<int> heights){
+int findLargestRectangle(vector<int> heights) {
 	int max_area = 0;
 	int idx = -1;
 	int curr_area = 0;
 	
 	stack<int> buildings;
 	
-	for(int i = 0; i<heights.size(); i++){
+	for(int i = 0; i<heights.size(); i++) {
 		// if the height of the current building is higher 
-		if(buildings.empty() || heights[buildings.top()] < heights[i]){
+		if(buildings.empty() || heights[buildings.top()] < heights[i]) {
 			buildings.push(i);
 		}
-		else if(heights[buildings.top()] >= heights[i]){	// when the current height is shorter
+		else if(heights[buildings.top()] >= heights[i]) {	// when the current height is shorter
 			
 			// pop the buildings and at the same time compute the largest area for each
-			while(!buildings.empty() && heights[buildings.top()] >= heights[i]){
+			while(!buildings.empty() && heights[buildings.top()] >= heights[i]) {
 				// compute area for the current building
 				idx = buildings.top();
 				buildings.pop();
 				// area of largest rectangle supported by this building
 				curr_area = heights[idx] * (i - (buildings.empty() ? 0 : buildings.top()+1));
-				if(curr_area > max_area){
+				if(curr_area > max_area) {
 					max_area = curr_area;
 				}
 			}
@@ -57,7 +57,7 @@ int findLargestRectangle(vector<int> heights){
 	}
 	
 	// area for the remaining buildings
-	while(!buildings.empty()){
+	while(!buildings.empty()) {
 		idx = buildings.top();
 		buildings.pop();
 		
