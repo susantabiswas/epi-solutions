@@ -11,6 +11,13 @@
 
     Output:
         nth string term
+        
+    TC:
+        T(n) <= 2*T(n-1),
+                ~ 2^n
+        Each ith term can have at max twice the number of chars that (i-1)th term
+        had. Also for finding nth term, we need to find the terms from 1...n.
+        Total: O(n * 2^n)
 */
 
 #include<iostream>
