@@ -142,12 +142,37 @@ Node* reverseKNodes(Node* head, int k){
     // reverse the first k nodes
     Node* new_head = reverseListIter(start);
     
+    // keeps track of last node of previos reversed sublist
+    Node* prev = start;
     while(head){
-        
-    }
+        // join the reversed list to next node
+        start->next = head;
+        start = head;
+        count = 1;
+        while(head && count++ < k)
+            head = head->next;
+
+        // if current node is not NULL, means we covered K nodes
+        // so we can reverse
+        if(head) {
+            last = head;
+            head = head->next;
+            last->next = nullptr;
+
+            prev->next = reverseListIter(start);
+            prev = start;
+        }
+    } 
+    return new_head;
 }
 
 int main(){
-    
+    Node* head1 = createNode(10);
+    for(int i = 9; i >= 0; i--)
+        insertNode(head1, i, 0);
+    displayNodes(head1);
+
+    Node* head = reverseKNodes(head1, 3);
+    displayNodes(head);
     return 0;
 }
