@@ -175,7 +175,7 @@ int main() {
     bst.inOrderTraversal(bst.getRoot());
     cout << endl;
     
-    bst.DeleteRecursively(5);
+    bst.Delete(5);
     bst.inOrderTraversal(bst.getRoot());
     return 0;
 }
