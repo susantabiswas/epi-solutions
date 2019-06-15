@@ -164,12 +164,12 @@ Node* reverseSublist(Node*& head, int a, int b){
         head = head->next;
     }
 
-    // when the ath node is not the ath_node element of the given list
+    // when the ath node is not the head element of the given list
     if(start_prev){
         // reverse the sublist
         start_prev->next = reverseListIter(ath_node);
     }
-    else{   // when the ath node is the ath_node node in the given list
+    else{   // when the ath node is the head node in the given list
         new_head = reverseListIter(ath_node);
     }
     // join the last node of sublist
