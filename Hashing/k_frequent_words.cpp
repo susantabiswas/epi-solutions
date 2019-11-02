@@ -30,6 +30,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <utility>
+#include <queue>
 using namespace std;
 
 // Comparator for sort
@@ -39,6 +40,7 @@ struct Comp{
 	}
 };
 
+// Solution 1
 // TC: O(n + mlogm)
 vector<pair<string, int>> kFrequentWords(vector<string>& arr, int k) {
 	
@@ -58,12 +60,48 @@ vector<pair<string, int>> kFrequentWords(vector<string>& arr, int k) {
 	return vector<pair<string, int>>(freq.begin(), freq.begin() + k);
 }
 
+
+// Solution 2
+// TC: O(n + mlogk)
+vector<pair<string, int>> kFrequentWordsPQueue(vector<string>& arr, int k) {
+	unordered_map<string, int> char_freq;
+	for(const auto& word: arr)
+		++char_freq[word];
+	
+	vector<pair<string, int>> freq(char_freq.begin(), char_freq.end());
+	priority_queue<pair<string, int>, vector<pair<string, int>>, Comp> pq;
+
+	// add it to the priority queue
+	for(const auto& word_freq: freq) {
+		if(!pq.empty() && pq.size() >= k) {
+			if(pq.top().second < word_freq.second) {
+				pq.pop();
+				pq.emplace(word_freq);
+			}
+		}
+		else
+			pq.emplace(word_freq);
+	}
+	vector<pair<string, int>> k_freq;
+	while(!pq.empty()) {
+		k_freq.emplace_back(pq.top());
+		pq.pop();
+	}
+	return k_freq;
+	
+}
+
 int main() {
 	vector<string> arr = {"I", "apple", "banana", "was", "apple", "orange", "apple", "banana", "new",
 						"new", "new"};
 
 	vector<pair<string, int>> ans = kFrequentWords(arr, 2);
+	vector<pair<string, int>> ans1 = kFrequentWordsPQueue(arr, 2);
 	for(const auto& w: ans) {
+		cout << w.first << endl;
+	}
+	cout << endl;
+	for(const auto& w: ans1) {
 		cout << w.first << endl;
 	}
 	return 0;
