@@ -63,15 +63,16 @@ pair<int, int> smallestSequentialSubarrayWithKeywords(vector<string>& arr,
 				smallest_subarray_length[idx] = smallest_subarray_length[idx-1] +
 												i - latest_occurrence[idx-1];
 			}
+			// set the lastest occurrence
+			latest_occurrence[idx] = i;
+			
 			if (idx == keywords.size() - 1) {	// if it is the last keyword, check if subarray length is global min or not
 				if(smallest_subarray_length[idx] < global_smallest_subarray_length) {
 					global_smallest_subarray_length = smallest_subarray_length[idx];
-					keywords_subarray = {latest_occurrence[0], i};
+					keywords_subarray = {i - smallest_subarray_length.back() + 1, i};
 				}
 			}
 
-			// set the lastest occurrence
-			latest_occurrence[idx] = i;
 		}
 	}	
 
@@ -79,9 +80,9 @@ pair<int, int> smallestSequentialSubarrayWithKeywords(vector<string>& arr,
 }
 
 int main() {
-	vector<string> arr = {"I", "apple", "kiwi", "banana", "was", "apple", "orange", "apple", "banana", "apple", "new",
+	vector<string> arr = {"I", "apple", "kiwi", "banana", "was", "banana", "apple", "kiwi", "kiwi", "was", "apple", "orange", "apple", "banana", "apple", "new",
 						"new", "new"};
-	vector<string> keywords = {"banana", "apple"};
+	vector<string> keywords = {"banana", "was", "apple"};
 	
 	pair<int, int> subarray_idx = smallestSequentialSubarrayWithKeywords(arr, keywords);
 	cout << "Start: " << subarray_idx.first << ", Second: " << subarray_idx.second << endl;
