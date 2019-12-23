@@ -1,13 +1,13 @@
-/* 
+/*
 	There is an array which has elements which increase in order and then start decreasing. This can happen multiple
 	time. Sort such an array.
 
 	Input: vector of int
 	Output: 1d sorted vector
-	
+
 	Solution:
 		First we segregate the vectors into individual sorted arrays and then we
-		use the algorithm for merging multiple sorted vectors. We use a 2d vector for storing the sorted 
+		use the algorithm for merging multiple sorted vectors. We use a 2d vector for storing the sorted
 		vectors.
 		Increasing vector can be added directly. For decreasing vector we first need to reverse the elements then add.
 
@@ -19,7 +19,7 @@
 			which are smaller and then finding the smallest amongst them each time.
 
 		TC: O(nlogk), k: no. of vectors, n: total sequences
-		SC: O(k) 
+		SC: O(k)
 */
 
 #include <iostream>
@@ -31,50 +31,48 @@
 #include <functional>
 using namespace std;
 
-struct VectorIterator{
+struct VectorIterator {
 	vector<int>::const_iterator curr;	// for current vector element
 	vector<int>::const_iterator last; // for saving vector end
-	
-	bool operator>(const VectorIterator& b) const{
-		return 	*curr > *(b.curr);
+
+	bool operator>(const VectorIterator& b) const {
+		return 	*curr > * (b.curr);
 	}
 };
 
 // merges multiple sorted vector into a single vector
 vector<int> mergeMultipleSortedvectors(vector<vector<int>>& arr) {
 	vector<int> sorted_vector;
-	// num of vectors
-	const int num_vectors = arr.size();
-
+	
 	// min-heap of size equal to num of vectors, here we use lambda function for comparator
 	// we can use greater<> also, since '<' has been overloaded already in structure
 	priority_queue<VectorIterator, vector<VectorIterator>, function<bool(VectorIterator, VectorIterator)>>
-		min_heap([](const VectorIterator& a, const VectorIterator& b)->bool{
-			return *(a.curr) > *(b.curr);
-		});
-	
+		min_heap([](const VectorIterator& a, const VectorIterator& b)->bool {
+		return *(a.curr) > * (b.curr);
+			});
+
 	// for each vector, we put its first and last iterators, this helps
 	// to keep track of which vector element was popped 
-	for(const vector<int>& a: arr) {
-		min_heap.emplace(VectorIterator{a.cbegin(), a.cend()});	
+	for (const vector<int>& a : arr) {
+		min_heap.emplace(VectorIterator{ a.cbegin(), a.cend() });
 	}
-	
+
 	// now we keep popping the smallest element from heap untill all the 
 	// vector elements are finished
-	while(!min_heap.empty()) {
+	while (!min_heap.empty()) {
 		auto min_el = min_heap.top();
 		// pop the heap min
 		min_heap.pop();
 
 		// now push the next element from the vector from
 		// which the element was popped
-		if(min_el.curr != min_el.last) {
+		if (min_el.curr != min_el.last) {
 			sorted_vector.emplace_back(*(min_el.curr));
-			min_heap.emplace( VectorIterator{ next(min_el.curr), min_el.last });
+			min_heap.emplace(VectorIterator{ next(min_el.curr), min_el.last });
 		}
-			
+
 	}
-	
+
 	return sorted_vector;
 }
 
@@ -82,25 +80,27 @@ vector<int> mergeMultipleSortedvectors(vector<vector<int>>& arr) {
 vector<int> sortIncreasingDecreasingElements(vector<int>& arr) {
 	// for storing multiple sorted arrays from single array
 	vector<vector<int>> multiple_sorted_arrays;
-	
-	vector<int> :: iterator start = arr.begin();
-	vector<int> :: iterator last = arr.begin();
 
-	bool reverse_arr = false;
+	vector<int> ::iterator start = arr.begin(), last = arr.begin();
 
-	for(int i = 0; i < arr.size() - 1; i++, last++) {
-		// if next element is greater it means decreasing list has started
-		if(arr[i] > arr[i+1]) {
-			multiple_sorted_arrays.emplace_back(vector<int>(start, last + 1));
-			// first element for next array
-			start = last + 1;
-		}
-		else if(arr[i] <= arr[i+1]) {
-			// reverse the subvector first
-			reverse(start, last + 1);
-			multiple_sorted_arrays.emplace_back(vector<int>(start, last + 1));
-			// first element for next array
-			start = last + 1;
+	bool increasing = true;
+	for (int i = 1; i <= arr.size(); i++, last++) {
+		// add the series when a juction point is reached or the it is the last element
+		if ((arr[i - 1] >= arr[i] && increasing == true) ||	// increasing 
+			(arr[i - 1] < arr[i] && increasing == false) ||	// decreasing
+			i == arr.size()) {
+
+			if (increasing == true) {
+				multiple_sorted_arrays.emplace_back(vector<int>(start, last));
+			}
+			else if (increasing == false) {
+				//reverse(start, last);
+				multiple_sorted_arrays.emplace_back(vector<int>(start, last));
+			}
+			
+			start = last;
+			// change the series type
+			increasing = !increasing;
 		}
 	}
 
@@ -109,16 +109,18 @@ vector<int> sortIncreasingDecreasingElements(vector<int>& arr) {
 
 // overloading << for directly viewing the vector elements
 template<typename T>
-ostream&  operator<<(ostream& out, vector<T> arr) {
-	for(const auto& a: arr)
-		cout << a << " ";
-	cout << endl;
+ostream& operator<<(ostream& out, vector<T> arr) {
+	for (const auto& a : arr)
+		out << a << " ";
+	out << endl;
+
+	return out;
 }
 
 int main() {
-	vector<int> arr = {-1, 0, 5, 89, 7, 2, 5, 7, 9, 10, -22, 67, 89, 91, 100, 2, 8, 9, 10, 15, 77};
-							
+	vector<int> arr = { -1, 0, 5, 89, 7, 2, 5, 7, 9, 10, -22, 67, 89, 91, 100, 2, 8, 9, 10, 15, 77 };
 
-	cout << sortIncreasingDecreasingElements(arr);
+	auto sorted = sortIncreasingDecreasingElements(arr);
+	cout << sorted;
 	return 0;
 }
