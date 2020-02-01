@@ -23,7 +23,7 @@ using namespace std;
 int gcd(const int a, const int b){
     // if the bigger number is zero, that means the 'b' 
     // can divide 'a'
-    if(a == 0)
+    if(b == 0)
         return b;
     // We check which is the bigger number frst, then
     // the recurse with the remainder and diviser
@@ -33,11 +33,11 @@ int gcd(const int a, const int b){
         return gcd(b % a, a);
 }
 
-int gcd(int n, int m) {
-    if (n % m ==0) 
-    return m;
+int gcd2(int n, int m) {
+    if (m == 0) 
+        return n;
     if (n < m) swap(n, m);
-    while (m > 0) {
+    while (m >= 0) {
         n = n % m;
         swap(n, m);
     }
@@ -46,6 +46,6 @@ int gcd(int n, int m) {
 
 
 int main(){
-    cout << gcd(20, 1) << endl;
+    cout << gcd2(20, 0) << endl;
     return 0;
 }
