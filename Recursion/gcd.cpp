@@ -37,7 +37,7 @@ int gcd2(int n, int m) {
     if (m == 0) 
         return n;
     if (n < m) swap(n, m);
-    while (m >= 0) {
+    while (m > 0) {
         n = n % m;
         swap(n, m);
     }
