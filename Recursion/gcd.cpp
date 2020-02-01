@@ -5,6 +5,9 @@
         Since every time the function is called one of the numbers is atleast halved,
         that means the function s called till a number doesn't becomes zero, so 
         at max it can last for max(a, b) of bits
+
+        b >= a / 2, then after swap will make b at most half of its previous value
+        b < a / 2, then after swap will make a at most half of its previous value, since b is less than a / 2
     Input:
         Real numbers a and b
 
@@ -28,6 +31,17 @@ int gcd(const int a, const int b){
         return gcd(a % b, b);
     else
         return gcd(b % a, a);
+}
+
+int gcd(int n, int m) {
+    if (n % m ==0) 
+    return m;
+    if (n < m) swap(n, m);
+    while (m > 0) {
+        n = n % m;
+        swap(n, m);
+    }
+    return n;
 }
 
 
