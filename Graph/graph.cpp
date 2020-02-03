@@ -8,9 +8,9 @@ using namespace std;
 
 
 struct WeightedEdge {
-	int x, y;
+	int start, end;
 	int weight;
-	WeightedEdge(int x, int y, int weight) : weight(weight), x(x), y(y) {};
+	WeightedEdge(int start, int end, int weight) : weight(weight), start(start), end(end) {};
 };
 
 // Graph node
@@ -28,8 +28,8 @@ Vertex* createNode(int data) {
 }
 
 // Adds an edge between two vertices
-void addEdge(vector<Vertex*>& g, int src, int dst) {
-	g[src]->edges.emplace_back(WeightedEdge(src, dst, 1));
+void addEdge(vector<Vertex*>& g, int src, int dst, int weight=1) {
+	g[src]->edges.emplace_back(WeightedEdge(src, dst, weight));
 }
 
 // DFS of graph
@@ -43,7 +43,7 @@ void dfsHelper(vector<Vertex*>& g, Vertex* curr, unordered_map<Vertex*, bool>& v
 
 	// traverse its edges
 	for (WeightedEdge edge : curr->edges)
-		dfsHelper(g, g[edge.y], visited);
+		dfsHelper(g, g[edge.end], visited);
 }
 
 // Driver for DFS of graph
@@ -76,8 +76,8 @@ void BFS(vector<Vertex*>& g) {
 
 			// add its next edge nodes
 			for (WeightedEdge edge : curr->edges) {
-				if (visited.find(g[edge.y]) == visited.end()) {
-					q.emplace(g[edge.y]);
+				if (visited.find(g[edge.end]) == visited.end()) {
+					q.emplace(g[edge.end]);
 				}
 			}
 		}
@@ -90,7 +90,18 @@ void printGraph(vector<Vertex*>& g) {
 		cout << v->data << ": ";
 		// show the edges
 		for (const WeightedEdge edge : v->edges)
-			cout << g[edge.y]->data << " ";
+			cout << g[edge.end]->data << " ";
+		cout << endl;
+	}
+}
+
+// prints the Minimum Spanning Tree
+void printMST(vector<vector<WeightedEdge>>& mst) {
+	for (int i = 0; i < mst.size(); i++) {
+		cout << i << ": ";
+		// show the edges
+		for (const WeightedEdge& edge : mst[i])
+			cout << edge.end << "(" << edge.weight <<"), ";
 		cout << endl;
 	}
 }
@@ -192,7 +203,9 @@ public:
 
 
 // TC: O(ElogE (sorting) + VlogV(Union-Find for all vertices) )
-int kruskalMST(int& vertices, vector<WeightedEdge>& edges) {
+vector<vector<WeightedEdge>> kruskalMST(int& n_vertices, vector<WeightedEdge>& edges) {
+	// stores the MST
+	vector<vector<WeightedEdge> > mst(n_vertices);
 	// sort the edges
 	sort(edges.begin(), edges.end(),
 		[](WeightedEdge a, WeightedEdge b)->bool {
@@ -200,7 +213,7 @@ int kruskalMST(int& vertices, vector<WeightedEdge>& edges) {
 		});
 
 	// Initialize the Union-Find DS
-	UnionFind obj(vertices);
+	UnionFind obj(n_vertices);
 	int cost = 0;
 	// pick the edges one by one, making sure of the following:
 	// 1. The new edge doesn't create a cycle in the MST, so for
@@ -208,17 +221,19 @@ int kruskalMST(int& vertices, vector<WeightedEdge>& edges) {
 	//    then don't add the edge as it will create a cycle.
 	// 2. The edge picked is the smallest in weight possible at the moment 
 	for (const WeightedEdge& edge : edges) {
-		int src = edge.x;
-		int dst = edge.y;
+		int src = edge.start;
+		int dst = edge.end;
 		// check if they are connected or not
 		if (!obj.Find(src, dst)) {
 			// add the edge to MST
 			cost += edge.weight;
+			mst[src].emplace_back(edge);
 			// Since the vertices are connected now, Union them
 			obj.Union(src, dst);
 		}
 	}
-	return cost;
+	cout << "Kruskal MST cost:" << cost << endl;
+	return mst;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,11 +250,14 @@ int kruskalMST(int& vertices, vector<WeightedEdge>& edges) {
 		add to mst set
 		mark it visited
 	inorder to prevent cycle we check if nodes are visited
-	TC: O((E+V)logV)
+	TC: O((E)logV)
 */
 
-int primMST(int n_vertices, vector<WeightedEdge>& edges) {
+vector<vector<WeightedEdge>> primMST(vector<Vertex*>& g) {
 	int cost = 0;
+	int n_vertices = g.size();
+	// stores the MST
+	vector<vector<WeightedEdge> > mst(n_vertices);
 
 	// to track visited vertices
 	vector<bool> visited(n_vertices, false);
@@ -249,12 +267,38 @@ int primMST(int n_vertices, vector<WeightedEdge>& edges) {
 			return a.weight > b.weight; 
 		});
 
-	// Queue for doing BFS like traversal
-	queue<WeightedEdge> q;
-	// We start with the root vertex of graph
-	//q.emplace();
+	// we start with the first node
+	visited[0] = true;
+	// add all its neighbours
+	for (WeightedEdge& edge : g[0]->edges)
+		min_heap.emplace(edge);
 
-	return cost;
+	// We add only the edge with min weight that connects a vertex,
+	// NOTE: We have no control over the edges connecting the same vertex
+	// while adding to heap, so for popping check if it was visited
+	while (!min_heap.empty()) {
+		WeightedEdge curr = min_heap.top();
+		min_heap.pop();
+		
+		// add the edge iff the end vertex has not been visited so far
+		if (!visited[curr.end]) {
+			// mark the current as visited
+			visited[curr.end] = true;
+
+			// add to MST
+			mst[curr.start].emplace_back(curr);
+			cost += curr.weight;
+			// add its non visited neighbours
+			for (WeightedEdge& edge : g[curr.end]->edges) {
+				if (!visited[edge.end]) {
+					min_heap.emplace(edge);
+				}
+			}
+		}
+	}
+
+	cout << "Prim's cost:" << cost << endl;
+	return mst;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -283,13 +327,37 @@ int main() {
 
 	// Kruskal's MST
 	int n_vertices = 4;
+	/*
+		{0}----------7--------
+		|                    |
+		6                    |
+		|                    |
+		--->{3}---9---->{1}<--
+		    |             |
+			8             6
+			|             |
+			-------->{2}<--
+	*/
+	vector<Vertex*> g1 = createGraph(n_vertices);
+	addEdge(g1, 0, 1, 7);
+	addEdge(g1, 0, 3, 6);
+	addEdge(g1, 3, 1, 9);
+	addEdge(g1, 3, 2, 8);
+	addEdge(g1, 1, 2, 6);
+
 	vector<WeightedEdge> edges = { {0,1,7}, {0,3,6},
 									{3,1,9}, {3,2,8},
 									{1,2,6} };
-	cout << "Kruskal MST cost:" << kruskalMST(n_vertices, edges) << endl;
+	auto mst_kruskal = kruskalMST(n_vertices, edges);
+	printMST(mst_kruskal);
+	cout << endl;
+	// Prim's MST
+	auto mst_prim = primMST(g1);
+	printMST(mst_prim);
 
 	// delete the graph to avoid memory leak
 	deleteGraph(g);
+	deleteGraph(g1);
 	return 0;
 }
 
