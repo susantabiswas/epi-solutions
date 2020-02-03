@@ -2,16 +2,23 @@
 #include <vector>
 #include <unordered_map>
 #include <queue>
-#include < functional>
+#include <algorithm>
+#include <functional>
 using namespace std;
 
+
+struct WeightedEdge {
+	int x, y;
+	int weight;
+	WeightedEdge(int x, int y, int weight) : weight(weight), x(x), y(y) {};
+};
 
 // Graph node
 // To know if edges exists TC: O(V + E) 
 struct Vertex {
 	int data;
-	vector<Vertex*> edges;
-	Vertex(int data) : data(data), edges(vector<Vertex*>{}) {};
+	vector<WeightedEdge> edges;
+	Vertex(int data) : data(data), edges(vector<WeightedEdge>{}) {};
 };
 
 // Creates a graph node
@@ -22,16 +29,11 @@ Vertex* createNode(int data) {
 
 // Adds an edge between two vertices
 void addEdge(vector<Vertex*>& g, int src, int dst) {
-	g[src - 1]->edges.emplace_back(g[dst - 1]);
-}
-
-// Adds an edge between two vertices
-void addEdge(Vertex* src, Vertex* dst) {
-	src->edges.emplace_back(dst);
+	g[src]->edges.emplace_back(WeightedEdge(src, dst, 1));
 }
 
 // DFS of graph
-void dfsHelper(Vertex* curr, unordered_map<Vertex*, bool>& visited) {
+void dfsHelper(vector<Vertex*>& g, Vertex* curr, unordered_map<Vertex*, bool>& visited) {
 	// if the current is visited return
 	if (visited.find(curr) != visited.end())
 		return;
@@ -40,8 +42,8 @@ void dfsHelper(Vertex* curr, unordered_map<Vertex*, bool>& visited) {
 	cout << curr->data << " ";
 
 	// traverse its edges
-	for (Vertex* dst : curr->edges)
-		dfsHelper(dst, visited);
+	for (WeightedEdge edge : curr->edges)
+		dfsHelper(g, g[edge.y], visited);
 }
 
 // Driver for DFS of graph
@@ -51,7 +53,7 @@ void DFS(vector<Vertex*>& g) {
 	unordered_map<Vertex*, bool> visited;
 	//start traversal from each vertex to cover disconnet graph case as well
 	for (int i = 0; i < g.size(); i++)
-		dfsHelper(g[i], visited);
+		dfsHelper(g, g[i], visited);
 }
 
 //BFS of graph
@@ -73,9 +75,9 @@ void BFS(vector<Vertex*>& g) {
 			cout << curr->data << " ";
 
 			// add its next edge nodes
-			for (Vertex* dst : curr->edges) {
-				if (visited.find(dst) == visited.end()) {
-					q.emplace(dst);
+			for (WeightedEdge edge : curr->edges) {
+				if (visited.find(g[edge.y]) == visited.end()) {
+					q.emplace(g[edge.y]);
 				}
 			}
 		}
@@ -87,8 +89,8 @@ void printGraph(vector<Vertex*>& g) {
 	for (const Vertex* v : g) {
 		cout << v->data << ": ";
 		// show the edges
-		for (const Vertex* u : v->edges)
-			cout << u->data << " ";
+		for (const WeightedEdge edge : v->edges)
+			cout << g[edge.y]->data << " ";
 		cout << endl;
 	}
 }
@@ -188,16 +190,11 @@ public:
 		3. repeat step 2
 */
 
-struct WeightedEdge {
-	int x, y;
-	int weight;
-	WeightedEdge(int x, int y, int weight) : weight(weight), x(x), y(y) {};
-};
 
 // TC: O(ElogE (sorting) + VlogV(Union-Find for all vertices) )
 int kruskalMST(int& vertices, vector<WeightedEdge>& edges) {
 	// sort the edges
-	sort(edges.begin(), edges.end(), 
+	sort(edges.begin(), edges.end(),
 		[](WeightedEdge a, WeightedEdge b)->bool {
 			return a.weight < b.weight;
 		});
@@ -213,7 +210,6 @@ int kruskalMST(int& vertices, vector<WeightedEdge>& edges) {
 	for (const WeightedEdge& edge : edges) {
 		int src = edge.x;
 		int dst = edge.y;
-		cout << src << " " << dst << endl;
 		// check if they are connected or not
 		if (!obj.Find(src, dst)) {
 			// add the edge to MST
@@ -231,7 +227,7 @@ int kruskalMST(int& vertices, vector<WeightedEdge>& edges) {
 ///////////////////////// PRIM'S MINIMUM SPANNING TREE ///////////////////////////////////////////
 /*
 	Here two sets are maintained, one which has all the vertices and other is empty initially
-	
+
 	With each vertex we associate the cut cost
 	make starting node's cut cost = 0
 	while all the nodes are unvisited:
@@ -248,14 +244,15 @@ int primMST(int n_vertices, vector<WeightedEdge>& edges) {
 	// to track visited vertices
 	vector<bool> visited(n_vertices, false);
 	// make a min-heap for selecting the smallest edge weight vertex
-	priority_queue<vector<WeightedEdge>, WeightedEdge, function<bool(WeightedEdge, WeightedEdge)>>
-		min_heap([](WeightedEdge a, WeightedEdge b)->bool {
-		return a.weight > b.weight; });
+	priority_queue<WeightedEdge, vector<WeightedEdge>, function<bool(WeightedEdge, WeightedEdge)>>
+		min_heap([](const WeightedEdge& a, const WeightedEdge& b)->bool {
+			return a.weight > b.weight; 
+		});
 
 	// Queue for doing BFS like traversal
 	queue<WeightedEdge> q;
 	// We start with the root vertex of graph
-	q.emplace();
+	//q.emplace();
 
 	return cost;
 }
@@ -271,11 +268,11 @@ int main() {
 		|_______|
 	*/
 	// add edges
-	addEdge(g[0], g[1]);
-	addEdge(g[1], g[2]);
-	addEdge(g[2], g[0]);
-	addEdge(g[2], g[3]);
-	addEdge(g[3], g[4]);
+	addEdge(g, 0, 1);
+	addEdge(g, 1, 2);
+	addEdge(g, 2, 0);
+	addEdge(g, 2, 3);
+	addEdge(g, 3, 4);
 	printGraph(g);
 
 	cout << "DFS\n";
@@ -283,14 +280,14 @@ int main() {
 	cout << endl << "BFS\n";
 	BFS(g);
 	cout << endl;
-	
+
 	// Kruskal's MST
 	int n_vertices = 4;
 	vector<WeightedEdge> edges = { {0,1,7}, {0,3,6},
 									{3,1,9}, {3,2,8},
 									{1,2,6} };
-	cout << "Kruskal MST cost:" << kruskalMST(n_vertices, edges);
-	
+	cout << "Kruskal MST cost:" << kruskalMST(n_vertices, edges) << endl;
+
 	// delete the graph to avoid memory leak
 	deleteGraph(g);
 	return 0;
