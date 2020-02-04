@@ -303,6 +303,87 @@ vector<vector<WeightedEdge>> primMST(vector<Vertex*>& g) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// SHORTEST PATH ALGORITHM //////////////////////////////////////////
+void printDistances(vector<int>& distance) {
+    for(int i = 0; i < distance.size(); i++) {
+        cout << "[" << i << "]: " << distance[i] << endl;
+    } 
+}
+
+///////////////////////////////////////// BELLMAN FORD ///////////////////////////////////////////
+/*
+    Used for finding the shortest path from a SOURCE vertex to all other vertices.
+    
+    USE: Used for finding the existence of negative cycles.
+
+    The idea is to do relaxation for all the vertices. Since there can't be any cycles 
+    so we can have maximum of V-1 edges, otherwise there will be cycle.
+
+    1. select source SRC
+    dist[V] = INF
+    dist[SRC] = 0
+
+    for [1:V-1]:
+        for each edge a->b:
+            if W + dist[a] < dist[b]:
+                update the dist[b]
+
+    check for existence of negative cycle
+    for [0:V-1]:
+        for each edge a->b:
+            if W + dist[a] < dist[b]:
+                report the negative cycle
+
+    TC: O(EV)
+*/
+
+vector<int> bellmanFord(vector<Vertex*>& g, int src) {
+    const int N_VERTICES = g.size();
+    // initially distance of all the vertices from source is Infinity
+    vector<int> dist(N_VERTICES, numeric_limits<int>::max());
+
+    // distance of source vertex is source to reach 
+    dist[src] = 0;
+
+    // find the shortest distance using relaxation
+    for(int i = 0; i < N_VERTICES - 1; i++) {
+        // traverse through all the edges 
+        // TC: O(V + E)
+        for(const Vertex* v: g) {
+            for(const WeightedEdge edge: v->edges) {
+                int start = edge.start;
+                int end = edge.end;
+
+                // update the shortest distance if the current 
+                // weight makes the path shorter
+                if(edge.weight + dist[start] < dist[end]) {
+                    dist[end] = edge.weight + dist[start];
+                }
+            }
+        }
+    }
+
+    // check for negative cycle
+    for(const Vertex* v: g) {
+        for(const WeightedEdge& edge: v->edges) {
+            int start = edge.start;
+            int end = edge.end;
+
+            // if the current weight still makes the path shorter implies
+            // there is negative weight
+            if(edge.weight + dist[start] < dist[end]) {
+                cout << "Negative cycle in " << start << "---" << edge.weight <<"---->" << end << endl;
+            }
+        }
+    }
+    return dist;
+}
+
+///////////////////////////////////////// DJIKSTRA ///////////////////////////////////////////////
+
+//////////////////////////////////////// FLOYD WARSHALL //////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
 int main() {
 	vector<Vertex*> g = createGraph(5);
 
@@ -355,9 +436,29 @@ int main() {
 	auto mst_prim = primMST(g1);
 	printMST(mst_prim);
 
+    // Bellman Ford shortest path
+    /*
+		{0}----------4--------
+		|                    |
+		3                    |
+		|                    |
+		--->{2}         {1}<--
+		    |             |
+		   -2             7
+			|             |
+			-------->{3}<--
+	*/
+    vector<Vertex*> g2 = createGraph(4);
+	addEdge(g2, 0, 1, 4);
+	addEdge(g2, 0, 2, 3);
+	addEdge(g2, 1, 3, 7);
+	addEdge(g2, 2, 3, -2);
+    auto distances = bellmanFord(g2, 0);
+    printDistances(distances);
+
 	// delete the graph to avoid memory leak
 	deleteGraph(g);
 	deleteGraph(g1);
+    deleteGraph(g2);
 	return 0;
 }
-
