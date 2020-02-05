@@ -2,11 +2,12 @@
 #include <vector>
 #include <unordered_map>
 #include <queue>
+#include <stack>
 #include <algorithm>
 #include <functional>
 using namespace std;
 
-
+// Weighted Edge of graph
 struct WeightedEdge {
 	int start, end;
 	int weight;
@@ -28,7 +29,7 @@ Vertex* createNode(int data) {
 }
 
 // Adds an edge between two vertices
-void addEdge(vector<Vertex*>& g, int src, int dst, int weight=1) {
+void addEdge(vector<Vertex*>& g, int src, int dst, int weight = 1) {
 	g[src]->edges.emplace_back(WeightedEdge(src, dst, weight));
 }
 
@@ -101,7 +102,7 @@ void printMST(vector<vector<WeightedEdge>>& mst) {
 		cout << i << ": ";
 		// show the edges
 		for (const WeightedEdge& edge : mst[i])
-			cout << edge.end << "(" << edge.weight <<"), ";
+			cout << edge.end << "(" << edge.weight << "), ";
 		cout << endl;
 	}
 }
@@ -191,6 +192,58 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	TOPOLOGICAL SORTING
+	TC: O(V + E)
+	SC: O(V + E)
+
+	Gives ordering of vertices such that all the source vertices 
+	come before the destination vertices for edges.
+
+	The idea is to do a modified DFS. Instead of processing the current
+	vertex, go recurse for its adjacent neighbours whic are unvisited. This
+	way the parent node will be printed in the end.
+
+	NOTE: Works with directed acyclic graph only
+*/
+
+// Modified version of DFS
+void topologicalSortDFS(int src, vector<Vertex*>& g,
+	deque<int>& order, vector<bool>& visited) {
+	// mark it visited
+	visited[src] = true;
+
+	// do DFS for its neighbours
+	for (const WeightedEdge& edge : g[src]->edges) {
+		if(!visited[edge.end])
+			topologicalSortDFS(edge.end, g, order, visited);
+	}
+	// add to order
+	order.emplace_back(src);
+}
+
+vector<deque<int>> topologicalSort(vector<Vertex*>& g) {
+	const int n_vertices = g.size();
+	stack<Vertex*> s;
+	// for storing the topological order
+	vector<deque<int>> all_orders;
+	
+	// topological sorting from each vertex
+	for (int i = 0; i < n_vertices; i++) {
+		// stores a topological order
+		deque<int> order;
+		// for keeping track of visited nodes
+		vector<bool> visited(n_vertices, false);
+		visited[i] = true;
+		topologicalSortDFS(i, g, order, visited);
+		all_orders.emplace_back(order);
+	}
+	
+	return all_orders;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////// KRUSKAL'S MINIMUM SPANNING TREE ////////////////////////////////////////
@@ -264,8 +317,8 @@ vector<vector<WeightedEdge>> primMST(vector<Vertex*>& g) {
 	// make a min-heap for selecting the smallest edge weight vertex
 	priority_queue<WeightedEdge, vector<WeightedEdge>, function<bool(WeightedEdge, WeightedEdge)>>
 		min_heap([](const WeightedEdge& a, const WeightedEdge& b)->bool {
-			return a.weight > b.weight; 
-		});
+		return a.weight > b.weight;
+			});
 
 	// we start with the first node
 	visited[0] = true;
@@ -279,7 +332,7 @@ vector<vector<WeightedEdge>> primMST(vector<Vertex*>& g) {
 	while (!min_heap.empty()) {
 		WeightedEdge curr = min_heap.top();
 		min_heap.pop();
-		
+
 		// add the edge iff the end vertex has not been visited so far
 		if (!visited[curr.end]) {
 			// mark the current as visited
@@ -306,83 +359,197 @@ vector<vector<WeightedEdge>> primMST(vector<Vertex*>& g) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// SHORTEST PATH ALGORITHM //////////////////////////////////////////
 void printDistances(vector<int>& distance) {
-    for(int i = 0; i < distance.size(); i++) {
-        cout << "[" << i << "]: " << distance[i] << endl;
-    } 
+	for (int i = 0; i < distance.size(); i++) {
+		cout << "[" << i << "]: " << distance[i] << endl;
+	}
 }
 
+// Prints distance between all the vertex pairs
+void printAllDistances(vector<vector<int>>& distance) {
+	for (int i = 0; i < distance.size(); i++) {
+		cout << "[" << i << "]: ";
+		for (const auto& a : distance[i]) {
+			cout << a << " ";
+		}
+		cout << endl;
+	}
+}
 ///////////////////////////////////////// BELLMAN FORD ///////////////////////////////////////////
 /*
-    Used for finding the shortest path from a SOURCE vertex to all other vertices.
-    
-    USE: Used for finding the existence of negative cycles.
+	Used for finding the shortest path from a SOURCE vertex to all other vertices.
 
-    The idea is to do relaxation for all the vertices. Since there can't be any cycles 
-    so we can have maximum of V-1 edges, otherwise there will be cycle.
+	USE: Used for finding the existence of negative cycles.
 
-    1. select source SRC
-    dist[V] = INF
-    dist[SRC] = 0
+	The idea is to do relaxation for all the vertices. Since there can't be any cycles
+	so we can have maximum of V-1 edges, otherwise there will be cycle.
 
-    for [1:V-1]:
-        for each edge a->b:
-            if W + dist[a] < dist[b]:
-                update the dist[b]
+	1. select source SRC
+	dist[V] = INF
+	dist[SRC] = 0
 
-    check for existence of negative cycle
-    for [0:V-1]:
-        for each edge a->b:
-            if W + dist[a] < dist[b]:
-                report the negative cycle
+	for [1:V-1]:
+		for each edge a->b:
+			if W + dist[a] < dist[b]:
+				update the dist[b]
 
-    TC: O(EV)
+	check for existence of negative cycle
+	for [0:V-1]:
+		for each edge a->b:
+			if W + dist[a] < dist[b]:
+				report the negative cycle
+
+	TC: O(EV)
 */
 
 vector<int> bellmanFord(vector<Vertex*>& g, int src) {
-    const int N_VERTICES = g.size();
-    // initially distance of all the vertices from source is Infinity
-    vector<int> dist(N_VERTICES, numeric_limits<int>::max());
+	const int N_VERTICES = g.size();
+	// initially distance of all the vertices from source is Infinity
+	vector<int> dist(N_VERTICES, numeric_limits<int>::max());
 
-    // distance of source vertex is source to reach 
-    dist[src] = 0;
+	// distance of source vertex is source to reach 
+	dist[src] = 0;
 
-    // find the shortest distance using relaxation
-    for(int i = 0; i < N_VERTICES - 1; i++) {
-        // traverse through all the edges 
-        // TC: O(V + E)
-        for(const Vertex* v: g) {
-            for(const WeightedEdge edge: v->edges) {
-                int start = edge.start;
-                int end = edge.end;
+	// find the shortest distance using relaxation
+	for (int i = 0; i < N_VERTICES - 1; i++) {
+		// traverse through all the edges 
+		// TC: O(V + E)
+		for (const Vertex* v : g) {
+			for (const WeightedEdge edge : v->edges) {
+				int start = edge.start;
+				int end = edge.end;
 
-                // update the shortest distance if the current 
-                // weight makes the path shorter
-                if(edge.weight + dist[start] < dist[end]) {
-                    dist[end] = edge.weight + dist[start];
-                }
-            }
-        }
-    }
+				// update the shortest distance if the current 
+				// weight makes the path shorter
+				if (edge.weight + dist[start] < dist[end]) {
+					dist[end] = edge.weight + dist[start];
+				}
+			}
+		}
+	}
 
-    // check for negative cycle
-    for(const Vertex* v: g) {
-        for(const WeightedEdge& edge: v->edges) {
-            int start = edge.start;
-            int end = edge.end;
+	// check for negative cycle
+	for (const Vertex* v : g) {
+		for (const WeightedEdge& edge : v->edges) {
+			int start = edge.start;
+			int end = edge.end;
 
-            // if the current weight still makes the path shorter implies
-            // there is negative weight
-            if(edge.weight + dist[start] < dist[end]) {
-                cout << "Negative cycle in " << start << "---" << edge.weight <<"---->" << end << endl;
-            }
-        }
-    }
-    return dist;
+			// if the current weight still makes the path shorter implies
+			// there is negative weight
+			if (edge.weight + dist[start] < dist[end]) {
+				cout << "Negative cycle in " << start << "---" << edge.weight << "---->" << end << endl;
+			}
+		}
+	}
+	return dist;
 }
 
 ///////////////////////////////////////// DJIKSTRA ///////////////////////////////////////////////
+/*
+	Shortest distance between source vertex SRC to target vertex.
+	NOTE: Doesn't work with negative weights.
+	TC: O(V + ElogV)
+
+	1. set the distance for all the vertices as INF
+	2. dist[src] = 0
+	3. add the neighbouring vertices with their distance from source
+	while min heap is not empty:
+		take the current vertex with dist and update its
+		neighbouring vertex dist if current has not been visited
+*/
+vector<int> djikstra(vector<Vertex*>& g, int src, int target) {
+	const int n_vertices = g.size();
+	// for keeping track of visited vertices
+	vector<bool> visited(n_vertices, false);
+	// distance(i): distance from source vertex
+	vector<int> distance(n_vertices, numeric_limits<int>::max());
+	
+	// source distance is always zero
+	distance[src] = 0;
+	
+	// Vertex with its weight from its parent
+	struct WeightedVertex {
+		int label;
+		int distance = 0;
+		WeightedVertex(int label, int distance) : label(label), distance(distance) {};
+	};
+
+	// min-heap for getting the shortest weight vertex
+	priority_queue < WeightedVertex, vector<WeightedVertex>,
+					function<bool(WeightedVertex, WeightedVertex)>>
+		min_heap([](const WeightedVertex& a, const WeightedVertex& b)->bool {
+			return a.distance > b.distance;
+		});
+
+	// push the starting source
+	min_heap.emplace(WeightedVertex(src, 0));
+
+	while (!min_heap.empty()) {
+		WeightedVertex curr = min_heap.top();
+		min_heap.pop();
+
+		// if current is not visited, update the distacne of its neighbours
+		if (!visited[curr.label]) {
+			// mark it visited
+			visited[curr.label] = true;
+			// if current is the target return, or continue if 
+			// you want the shortest distance for all the vertices
+			if (curr.label == target)
+				break;
+			for (WeightedEdge& edge : g[curr.label]->edges) {
+				// update the path distance and push the neighbouring vertex distance iff it is unvisited
+				if (!visited[edge.end] && edge.weight + distance[curr.label] < distance[edge.end]) {
+					distance[edge.end] = edge.weight + distance[curr.label];
+					min_heap.emplace(WeightedVertex(edge.end, distance[edge.end]));
+				}
+			}
+		}
+	}
+
+	return distance;
+}
 
 //////////////////////////////////////// FLOYD WARSHALL //////////////////////////////////////////
+/*
+	All pair shortest distance.
+	TC: O(V^3)
+
+	This is a DP based solution, we use V x V states and find the min distance
+	between i and j using:
+	dist(i, j) = min(dist(i, j), dist(i, k) + dist(k,j)), i<=k<=j
+*/
+
+vector<vector<int>> floydWarshall(vector<Vertex*>& g) {
+	int n_vertices = g.size();
+	// dp(i, j): shortest distance between vertex i and vertex j
+	vector<vector<int>> distance(n_vertices, vector<int>(n_vertices, INT_MAX));
+	
+	// put the initial distance between vertices using the edge weights
+	for (const Vertex* v : g) {
+		for (const WeightedEdge& edge : v->edges) {
+			int start = edge.start;
+			int end = edge.end;
+
+			distance[start][end] = edge.weight;
+		}
+	}
+	// distance between the same vertex is zero
+	for (int i = 0; i < n_vertices; i++)
+		distance[i][i] = 0;
+
+	printAllDistances(distance);
+	for (int k = 0; k < n_vertices; k++) {
+		for (int i = 0; i < n_vertices; i++) {
+			for (int j = 0; j < n_vertices; j++) {
+				// update the distance if the current distance till kth vertex and beyond is lesser
+				if (((distance[i][k] == INT_MAX ||  distance[k][j] == INT_MAX) ? INT_MAX : distance[i][k] + distance[k][j]) < distance[i][j])
+					distance[i][j] = distance[i][k] + distance[k][j];
+			}
+		}
+	}
+	cout << endl;
+	return distance;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 int main() {
 	vector<Vertex*> g = createGraph(5);
@@ -414,7 +581,7 @@ int main() {
 		6                    |
 		|                    |
 		--->{3}---9---->{1}<--
-		    |             |
+			|             |
 			8             6
 			|             |
 			-------->{2}<--
@@ -436,29 +603,66 @@ int main() {
 	auto mst_prim = primMST(g1);
 	printMST(mst_prim);
 
-    // Bellman Ford shortest path
-    /*
+	// Bellman Ford shortest path
+	/*
 		{0}----------4--------
 		|                    |
 		3                    |
 		|                    |
 		--->{2}         {1}<--
-		    |             |
+			|             |
 		   -2             7
 			|             |
 			-------->{3}<--
 	*/
-    vector<Vertex*> g2 = createGraph(4);
+	vector<Vertex*> g2 = createGraph(4);
 	addEdge(g2, 0, 1, 4);
 	addEdge(g2, 0, 2, 3);
 	addEdge(g2, 1, 3, 7);
 	addEdge(g2, 2, 3, -2);
-    auto distances = bellmanFord(g2, 0);
-    printDistances(distances);
+	cout << "Bellman Ford:\n";
+	auto distances = bellmanFord(g2, 0);
+	printDistances(distances);
 
+	// Djikstra shortest path
+	/*
+		{0}----------4--------
+		|                    |
+		3                    |
+		|                    |
+		--->{2}         {1}<--
+			|             |
+		    2             7
+			|             |
+			-------->{3}<--
+	*/
+	int src = 0, target = 3;
+	vector<Vertex*> g3 = createGraph(4);
+	addEdge(g3, 0, 1, 4);
+	addEdge(g3, 0, 2, 3);
+	addEdge(g3, 1, 3, 7);
+	addEdge(g3, 2, 3, 2);
+	cout << "\nDjikstra: \nSource: " << src << ", Target: " << target << endl;
+	distances = djikstra(g3, 0, 3);
+	printDistances(distances);
+
+	cout << "\nFloyd Warshall:\n";
+	auto all_distances = floydWarshall(g3);
+	printAllDistances(all_distances);
+
+
+	// Topological sort 
+	auto topological_order = topologicalSort(g3);
+	cout << "\nTopological Sorting Orders:\n";
+	for (const auto& order : topological_order) {
+		for (auto it = order.rbegin(); it != order.rend(); it++)
+			cout << *it << " ";
+		cout << endl;
+	}
 	// delete the graph to avoid memory leak
 	deleteGraph(g);
 	deleteGraph(g1);
-    deleteGraph(g2);
+	deleteGraph(g2);
+	deleteGraph(g3);
 	return 0;
 }
