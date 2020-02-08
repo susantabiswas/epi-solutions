@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <queue>
 #include <stack>
+#include <string>
 #include <algorithm>
 #include <functional>
 using namespace std;
@@ -204,7 +205,7 @@ public:
 	vertex, go recurse for its adjacent neighbours whic are unvisited. This
 	way the parent node will be printed in the end.
 
-	NOTE: Works with directed acyclic graph only
+	To detect cycle we keep track of vertices in the recursion stack of current branch.
 */
 
 // Modified version of DFS
@@ -222,7 +223,7 @@ void topologicalSortDFS(int src, vector<Vertex*>& g,
 	order.emplace_back(src);
 }
 
-vector<deque<int>> topologicalSort(vector<Vertex*>& g) {
+vector<deque<int>> allTopologicalSortOrders(vector<Vertex*>& g) {
 	const int n_vertices = g.size();
 	stack<Vertex*> s;
 	// for storing the topological order
@@ -241,6 +242,92 @@ vector<deque<int>> topologicalSort(vector<Vertex*>& g) {
 	
 	return all_orders;
 }
+
+// DFS Helper
+// Returns true in case of cycle else false
+bool topologicalDFS(int curr, vector<Vertex*>& g, vector<int>& order,
+	vector<bool>& rec_stack, vector<bool>& visited) {
+	// current is visited means, topological ordering from current node
+	// must already be added, so we can safely ignore the remaining vertices from here on
+	if (visited[curr])
+		return false;
+	// mark the current as visited
+	visited[curr] = true;
+	// add to recursion stack
+	rec_stack[curr] = true;
+
+	// DFS for its neighbours
+	for (const WeightedEdge& edge: g[curr]->edges) {
+		// if current is already visited, that means there is a cycle
+		if (rec_stack[edge.end])
+			return true;
+		else if (topologicalDFS(edge.end, g, order, rec_stack, visited))
+			return true;
+	}
+	// make the current node of branch unvisited
+	rec_stack[curr] = false;
+	// add the current in the order after processing its neighbours
+	order.emplace_back(curr);
+
+	return false;
+}
+
+// Using DFS
+// TC: O(V + E)
+vector<int> topologicalDFS(vector<Vertex*>& g) {
+	// for tracking visited vertices
+	vector<bool> visited(g.size(), false);
+	// for keeping track of vertices in recursion stack
+	vector<bool> rec_stack(g.size(), false);
+	vector<int> order;
+	// in case of disconnected graph
+	for (int i = 0; i < g.size(); i++)
+		if (!visited[i])
+			// if there is a cycle return empty order
+			if (topologicalDFS(i, g, order, rec_stack, visited))
+				return vector<int>{};
+	return order;
+}
+
+// Using BFS
+// TC: O(V + E)
+vector<int> topologicalBFS(vector<Vertex*>& g) {
+	vector<int> order;
+	// to keep track of visited vertices
+	int visited_vertices = 0;
+
+	// find the indegree of vertices
+	vector<int> indegree(g.size(), 0);
+	for (int i = 0; i < g.size(); i++)
+		for (const WeightedEdge& edge: g[i]->edges)
+			++indegree[edge.end];
+
+	queue<int> q;
+	// add the 0 indegree vertices
+	for (int i = 0; i < indegree.size(); i++)
+		if (indegree[i] == 0)
+			q.emplace(i);
+
+	while (!q.empty()) {
+		int curr = q.front();
+		order.emplace_back(curr);
+		q.pop();
+		++visited_vertices;
+
+		// decrement the indegree of its neighbours
+		for (const WeightedEdge& edge : g[curr]->edges) {
+			--indegree[edge.end];
+			if (indegree[edge.end] == 0)
+				q.emplace(edge.end);
+		}
+	}
+
+	// return the order in reverse 
+	reverse(order.begin(), order.end());
+	return visited_vertices < g.size() ? vector<int>{} : order;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -369,7 +456,7 @@ void printAllDistances(vector<vector<int>>& distance) {
 	for (int i = 0; i < distance.size(); i++) {
 		cout << "[" << i << "]: ";
 		for (const auto& a : distance[i]) {
-			cout << a << " ";
+			cout << (a == INT_MAX ? "INF" : to_string(a)) << " ";
 		}
 		cout << endl;
 	}
@@ -652,13 +739,28 @@ int main() {
 
 
 	// Topological sort 
-	auto topological_order = topologicalSort(g3);
+
+	// finds all the topological sort orders
+	auto topological_order = allTopologicalSortOrders(g3);
 	cout << "\nTopological Sorting Orders:\n";
 	for (const auto& order : topological_order) {
 		for (auto it = order.rbegin(); it != order.rend(); it++)
 			cout << *it << " ";
 		cout << endl;
 	}
+
+	auto order = topologicalBFS(g3);
+	cout << "\nBFS Topological Sorting:\n"; 
+	for (auto it = order.rbegin(); it != order.rend(); it++)
+		cout << *it << " ";
+	cout << endl;
+
+	order = topologicalDFS(g3);
+	cout << "\nDFS Topological Sorting:\n";
+	for (auto it = order.rbegin(); it != order.rend(); it++)
+		cout << *it << " ";
+	cout << endl;
+
 	// delete the graph to avoid memory leak
 	deleteGraph(g);
 	deleteGraph(g1);
