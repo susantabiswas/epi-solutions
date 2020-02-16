@@ -2,8 +2,8 @@
     Given an int 'n', find all primes existing between 1 and 'n'
 
     Solution:
-        We use a table of size 'n' denoting each number including 'n' and mark all them as 
-        primes initially. Then we start with 2, mark all its multiples as primes, then go to the next
+        We use a table of size 'n' denoting each number including 'n' and mark all of them as 
+        primes initially. Then we start with 2, mark all its multiples as non-primes, then go to the next
         non marked number and check if it is prime by traversing through all sqrt(that number), again
         mark all its multiples as non-primes.
         Each time we are seiving numbers, in total n/2 + n/3 + n/5 ...n/p ~ n(1/2 + 1/3 .. 1/p)  ~ n*(loglogn)   

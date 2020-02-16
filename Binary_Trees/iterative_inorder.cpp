@@ -1,5 +1,5 @@
 /*
-    Given a tree. Do preorder traversal without recursion.
+    Given a tree. Do inorder traversal without recursion.
 
     Solution:
         We use stack for imitating the recursive calls.
@@ -22,25 +22,25 @@ struct Node {
     Node(T data) : data(data), left(nullptr), right(nullptr) {}
 };
 
-// preorder traversal without recursion
-void iterativePreorderTraversal(unique_ptr<Node<int>>& root) {
+// inorder traversal without recursion
+void iterativeInorderTraversal(unique_ptr<Node<int>>& root) {
     stack<Node<int>*> s;
     Node<int>* curr = root.get();
 
-    // since it is preorder, we print as we go as much left as possible
-    // and then go right, else go to the parent
+    // since it is inorder, we we go as much left as possible,
+    // then print the current and go right, else go to the parent
     while (curr || !s.empty()) {
         // go left 
         if (curr) {
             s.push(curr);
-            // print the current data
-            cout << curr->data << " ";
             curr = curr->left.get();
         }
         else {
             // when going left is not possible
             curr = s.top();
             s.pop();
+            // print the current data
+            cout << curr->data << " ";
             // go right
             curr = curr->right.get();
         }
@@ -77,6 +77,6 @@ int main() {
     root->right->left->left = make_unique<Node<int>>(7);
     postOrderTraversal(root);
     cout << endl;
-    iterativePreorderTraversal(root);
+    iterativeInorderTraversal(root);
     return 0;
 }
