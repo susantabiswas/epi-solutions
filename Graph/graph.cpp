@@ -331,7 +331,7 @@ vector<int> topologicalBFS(vector<Vertex*>& g) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-///					BOTH PRIM AND KRUSKAL'S ALGO WORK ONLY FOR UNDIRECTED GRAPHS
+///					BOTH PRIM AND KRUSKAL'S ALGO WORK ONLY FOR UNDIRECTED CONNECTED GRAPHS 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////// KRUSKAL'S MINIMUM SPANNING TREE ////////////////////////////////////////
 /*
@@ -390,7 +390,7 @@ vector<vector<WeightedEdge>> kruskalMST(int& n_vertices, vector<WeightedEdge>& e
 		add to mst set
 		mark it visited
 	inorder to prevent cycle we check if nodes are visited
-	TC: O((E)logV)
+	TC: O((E)logE)
 */
 
 vector<vector<WeightedEdge>> primMST(vector<Vertex*>& g) {
