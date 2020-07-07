@@ -23,7 +23,7 @@ using namespace std;
 int gcd(const int a, const int b){
     // if the bigger number is zero, that means the 'b' 
     // can divide 'a'
-    if(b == 0)
+    if(a == 0)
         return b;
     // We check which is the bigger number frst, then
     // the recurse with the remainder and diviser
@@ -33,6 +33,29 @@ int gcd(const int a, const int b){
         return gcd(b % a, a);
 }
 
+/*
+    TC: O(logn), n = max(n, m)
+    Worst case is when n and m are consecutive fibonacci terms.
+    n = fib(N), m = fib(N-1)
+    n = fib(N-1) + fib(N-2)
+    n = m + k
+    
+    now n = n % m 
+    n = k (since diff between n and m is k)
+    after swapping
+    so n = b(fib(N-1))
+    m = k (fib(N-2))
+    
+    n = fib(N-1) + fib(N-2),
+    so it will take N fibonacci steps, so complexity reduces to finding complexity of finding Nth fibonacci num
+    which is (golden ratio) ^ N
+    
+    (1.62) ^ N = n
+    N = log(1.62 base) (n)
+    N = log(n)
+    
+    where n = max of inputs 
+*/
 int gcd2(int n, int m) {
     if (m == 0) 
         return n;

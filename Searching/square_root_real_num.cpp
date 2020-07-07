@@ -35,7 +35,10 @@ Category decideCategoryOfRealNum(double& num){
 // compares two double real numbers
 State compareNumbers(double& a, double& b){
 	double diff = (a - b) / b;	// normalization
-	
+	// Epsilon is the diff between 1 and next representable number
+	// a < b, then the diff should atleast be greater than a -epsilon as
+	// in negative line, numbers more towards 0 are bigger, or smaller the abs(that_neg_number)
+	// bigger is its value, since epsilon is smallest so -epsilon is the biggest negative number.
 	if(diff < - numeric_limits<double>::epsilon()) // when a < b
 		return SMALLER;
 	else if(diff > numeric_limits<double>::epsilon())	// a > b

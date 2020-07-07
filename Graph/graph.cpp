@@ -161,7 +161,7 @@ public:
 		int root_b = getRoot(b);
 
 		// based on size of both the components,smaller is the net root is selected
-		if (size_[b] < size_[a]) {
+		if (size_[root_b] < size_[root_a]) {
 			root_[root_b] = root_a;
 			size_[root_a] += size_[root_b];
 		}

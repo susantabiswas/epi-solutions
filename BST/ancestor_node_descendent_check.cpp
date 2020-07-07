@@ -10,7 +10,7 @@
         first leaf, worst case:O(h).
         To prevent that, we start the search for the middle from both the nodes simultanously. We one of the
         nodes finds the other node, then not ordered, if it finds the middle, then we start searching from
-        the middle for the other node. If the depth deiff between the two nodes is 'd', then it will take O(d)
+        the middle for the other node. If the depth diff between the two nodes is 'd', then it will take O(d)
         if they are ordered, and in worst case it will take O(h)
 
         TC: O(d) for successful case, O(h): if nodes are not ordered 

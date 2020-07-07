@@ -3,13 +3,13 @@
     
     Solution:
         For a binary tree it can be done in O(n) in worst case. For BST, we can do better.
-        We can prine our search in BST.
+        We can prune our search in BST.
         For a given node:
         1. If the root is either of 'a' or 'b', then it is the LCA.
         2. If the root is such that both 'a' and 'b' lie on the opposite subtrees, then it is the
             LCA.
         3. If the root is lesser than both 'a' and 'b', LCA is in right subtree.
-        4. If the root is greater than both 'a' and 'b', LCa is in left subtree.
+        4. If the root is greater than both 'a' and 'b', LCA is in left subtree.
 
         TC: worst-case: O(n) skewed tree, Avg. Case: O(h)
         SC: O(h)
