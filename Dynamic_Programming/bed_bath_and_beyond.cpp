@@ -109,8 +109,8 @@ int main() {
     unordered_set<string> dict = {"mobile","samsung","sam","sung", 
                             "man","mango","icecream","and", 
                              "go","i","like","ice","cream", "jam", 
-                             "painting", "park", "lake"};
-    string str = "ilikepainting";
+                             "painting", "paint","inga","park", "lake"};
+    string str = "ilikepaintinga";
 
     cout << canStringBeDecomposed(str, dict);    
     return 0;
