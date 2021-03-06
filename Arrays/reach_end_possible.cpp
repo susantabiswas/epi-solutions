@@ -1,7 +1,7 @@
 /*
     Problem:
         Given an array where each entry stores the max steps that can be taken
-        from there, find if we begin from the first index, if it possible to
+        from there, find if we begin from the first index, if it is possible to
         reach the last index.
     Input: int array
     Output: bool

@@ -18,6 +18,7 @@
 #include <algorithm>
 using namespace std;
 
+
 // adds 1 to array based number
 vector<int> incrementNumber(vector<int> arr) {
     // stores the incremented number
@@ -42,6 +43,7 @@ vector<int> incrementNumber(vector<int> arr) {
     }
     return result;
 }
+
 
 ostream& operator<<(ostream& out, vector<int> arr) {
     for(const auto& a: arr) 

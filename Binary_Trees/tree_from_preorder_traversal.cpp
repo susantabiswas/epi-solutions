@@ -1,5 +1,5 @@
 /*
-    Given preorder traversal data, with null indicators for indiacating null in traversal. Construct the tree.
+    Given preorder traversal data, with null indicators for indicating null in traversal. Construct the tree.
     Solution:
         Since this is a binary tree with preorder traversal data given, it means that we are first going to the
         left subtree always then head to the right subtree. So we start traversing through the tree and each time 

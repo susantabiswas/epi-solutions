@@ -97,7 +97,7 @@ ostream& operator<<(ostream& out, vector<int> arr) {
     cout << endl;
 }
 
-int main(){
+int main() {
     vector<int> arr = {1, 23, 4, 67, 2, 898, 2, 9, 56, 4, 67, 23, 1, 98};
     cout << "Originally:\n" << arr << endl;
     int pivot_idx = 3;

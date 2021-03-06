@@ -160,7 +160,10 @@ public:
 		int root_a = getRoot(a);
 		int root_b = getRoot(b);
 
-		// based on size of both the components,smaller is the net root is selected
+		// based on size of both the components,we make the root of the component with smaller nodes
+		// part of component with more nodes. this ensures that the smaller component is spread across
+		// horizontally rather than putting a component with lots of nodes part of a component
+		// which has lesser nodes and makes the overall depth longer.
 		if (size_[root_b] < size_[root_a]) {
 			root_[root_b] = root_a;
 			size_[root_a] += size_[root_b];
@@ -178,7 +181,7 @@ public:
 		return getRoot(a) == getRoot(b);
 	}
 
-	// Returns the no. of connect components
+	// Returns the no. of connected components
 	// prints the number of elements in each component
 	void connectedComponents() {
 		vector<int> result;
@@ -202,7 +205,7 @@ public:
 	come before the destination vertices for edges.
 
 	The idea is to do a modified DFS. Instead of processing the current
-	vertex, go recurse for its adjacent neighbours whic are unvisited. This
+	vertex, go recurse for its adjacent neighbours which are unvisited. This
 	way the parent node will be printed in the end.
 
 	To detect cycle we keep track of vertices in the recursion stack of current branch.
@@ -342,7 +345,7 @@ vector<int> topologicalBFS(vector<Vertex*>& g) {
 */
 
 
-// TC: O(ElogE (sorting) + VlogV(Union-Find for all vertices) )
+// TC: O(ElogE (sorting) + ElogV(Union-Find for all vertices) )
 vector<vector<WeightedEdge>> kruskalMST(int& n_vertices, vector<WeightedEdge>& edges) {
 	// stores the MST
 	vector<vector<WeightedEdge> > mst(n_vertices);
@@ -384,6 +387,7 @@ vector<vector<WeightedEdge>> kruskalMST(int& n_vertices, vector<WeightedEdge>& e
 	Here two sets are maintained, one which has all the vertices and other is empty initially
 
 	With each vertex we associate the cut cost
+	Cut cost of vertex u: cost of an edge involving vertex u
 	make starting node's cut cost = 0
 	while all the nodes are unvisited:
 		pick the vertex with least cut cost, if it is unvisited
@@ -628,7 +632,8 @@ vector<vector<int>> floydWarshall(vector<Vertex*>& g) {
 		for (int i = 0; i < n_vertices; i++) {
 			for (int j = 0; j < n_vertices; j++) {
 				// update the distance if the current distance till kth vertex and beyond is lesser
-				if (((distance[i][k] == INT_MAX ||  distance[k][j] == INT_MAX) ? INT_MAX : distance[i][k] + distance[k][j]) < distance[i][j])
+				if (((distance[i][k] == INT_MAX ||  distance[k][j] == INT_MAX) ? 
+						INT_MAX : distance[i][k] + distance[k][j]) < distance[i][j])
 					distance[i][j] = distance[i][k] + distance[k][j];
 			}
 		}

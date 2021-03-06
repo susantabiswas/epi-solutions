@@ -1,6 +1,6 @@
 /*
 	Given a sorted array of distinct integer elements.
-	Find the an element whose value matches its index.
+	Find an element whose value matches its index.
 	
 	Input: array of int
 	Output: if present return index else -1

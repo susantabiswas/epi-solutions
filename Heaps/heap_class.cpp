@@ -28,7 +28,8 @@ private:
     int num_heap_elements_;
     HeapType heap_type_;
     const int RESIZE_FACTOR = 2;
-
+    function<bool(int, int)> comparator_;
+        
 public:
     // Constructor
     // creates a heap with elements from vector and the capacity 
@@ -42,24 +43,21 @@ public:
         for (const auto& a : arr)
             heap_.emplace_back(a);
         num_heap_elements_ = heap_.size();
+        // update the heap capacity
+        capacity_ = 2 * num_heap_elements_;
+        heap_.resize(capacity_);
 
-        struct greater<T> comp_greater;
-        struct less<T> comp_less;
-
-        // set the comparator acc. to heap type
-        if (heap_type_ == MAX_HEAP)
-            comp_greater = greater<T>();
-        else if (heap_type_ == MIN_HEAP)
-            comp_less = less<T>();
+        // set the comparator_ acc. to heap type
+        if(heap_type_ == MAX_HEAP)
+            comparator_ = greater<T>();
+        else
+            comparator_ = less<T>();
 
         // now heapify the vector, starting with the first non-leaf node
         // since leaf nodes always satisfy heap property
         // start percolating down
         for (int i = (num_heap_elements_ - 1) / 2; i >= 0; i--) {
-            if (heap_type_ == MAX_HEAP)
-                heapifyDown(i, comp_greater);
-            else if (heap_type_ == MIN_HEAP)
-                heapifyDown(i, comp_less);
+                heapifyDown(i, comparator_);
         }
     }
 
@@ -73,6 +71,11 @@ public:
         capacity_ = capacity;
         // set heap to current capacity
         heap_.resize(capacity_);
+        // set the comparator_ acc. to heap type
+        if(heap_type_ == MAX_HEAP)
+            comparator_ = greater<T>();
+        else
+            comparator_ = less<T>();
     }
 
     // for pushing element to heap
@@ -87,25 +90,16 @@ public:
         // then heapify from there to all the way up
         ++num_heap_elements_;
         heap_[num_heap_elements_ - 1] = data;
-
+            
         // while the parent is not satisfying the heap
         // property, swap currrent element with parent
         // till the time current element is at its correct position
         int i = num_heap_elements_ - 1;
-        if (heap_type_ == MAX_HEAP) {
-            while (i > 0 && (heap_[getParentIndex(i)] < heap_[i])) {
-                int parent_idx = getParentIndex(i);
-                swap(heap_[parent_idx], heap_[i]);
-                i = parent_idx;
-            }
+        while (i > 0 && (!comparator_(heap_[getParentIndex(i)], heap_[i]))) {
+            int parent_idx = getParentIndex(i);
+            swap(heap_[parent_idx], heap_[i]);
+            i = parent_idx;
         }
-        else if (heap_type_ == MIN_HEAP) {
-            while (i > 0 && heap_[getParentIndex(i)] > heap_[i]) {
-                int parent_idx = getParentIndex(i);
-                swap(heap_[parent_idx], heap_[i]);
-                i = parent_idx;
-            }
-        }    
     }
 
     // for deleting element from heap
@@ -128,10 +122,7 @@ public:
         --num_heap_elements_;
 
         // heapify down to ensure heap property is maintained
-        if (heap_type_ == MAX_HEAP)
-            heapifyDown(0, greater<T>());
-        else if (heap_type_ == MIN_HEAP)
-            heapifyDown(0, less<T>());
+        heapifyDown(0, comparator_);
 
         return popped_data;
     }

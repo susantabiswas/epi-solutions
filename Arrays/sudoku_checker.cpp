@@ -30,12 +30,12 @@ bool isValidRegion(vector<vector<int>>& grid, int row_s, int row_e,
     // go through the region while marking the numbers
     for(int i = row_s; i < row_e; i++) {
         for(int j = col_s; j < col_e; j++) {
-            // if the location is not vacanat, then mark that number as visited
+            // if the location is not vacant, then mark that number as visited
             if(grid[i][j] != 0) {
                 if(nums[grid[i][j]])
                     return false;
-                else
-                    nums[grid[i][j]] = true;
+                // mark as visited
+                nums[grid[i][j]] = true;
             }
         }
     }
