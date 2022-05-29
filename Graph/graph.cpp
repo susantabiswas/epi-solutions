@@ -400,6 +400,10 @@ vector<vector<WeightedEdge>> kruskalMST(int& n_vertices, vector<WeightedEdge>& e
 vector<vector<WeightedEdge>> primMST(vector<Vertex*>& g) {
 	int cost = 0;
 	int n_vertices = g.size();
+	// No. of vertices added to MST, we can avoid unnecessary computation once all 
+	// the vertices are visited once
+	int processed_vertices = 0;
+	
 	// stores the MST
 	vector<vector<WeightedEdge> > mst(n_vertices);
 
@@ -420,7 +424,7 @@ vector<vector<WeightedEdge>> primMST(vector<Vertex*>& g) {
 	// We add only the edge with min weight that connects a vertex,
 	// NOTE: We have no control over the edges connecting the same vertex
 	// while adding to heap, so for popping check if it was visited
-	while (!min_heap.empty()) {
+	while (processed_vertices < n_vertices) {
 		WeightedEdge curr = min_heap.top();
 		min_heap.pop();
 
@@ -428,7 +432,7 @@ vector<vector<WeightedEdge>> primMST(vector<Vertex*>& g) {
 		if (!visited[curr.end]) {
 			// mark the current as visited
 			visited[curr.end] = true;
-
+			++processed_vertices;
 			// add to MST
 			mst[curr.start].emplace_back(curr);
 			cost += curr.weight;
