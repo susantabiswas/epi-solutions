@@ -1,5 +1,5 @@
 /* 
-	Given a max-heap in array form. Find the k largest elements from the heap without modifying th array.
+	Given a max-heap in array form. Find the k largest elements from the heap without modifying the array.
 
 	Input: int array
 	Output: k largest int vector
