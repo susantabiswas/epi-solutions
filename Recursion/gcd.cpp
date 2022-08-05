@@ -47,7 +47,8 @@ int gcd(const int a, const int b){
     m = k (fib(N-2))
     
     n = fib(N-1) + fib(N-2),
-    so it will take N fibonacci steps, so complexity reduces to finding complexity of finding Nth fibonacci num
+    so it will take N fibonacci steps, so complexity reduces to finding 
+    complexity of finding Nth fibonacci num
     which is (golden ratio) ^ N
     
     (1.62) ^ N = n
