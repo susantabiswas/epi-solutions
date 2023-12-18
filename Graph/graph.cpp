@@ -544,6 +544,10 @@ vector<int> bellmanFord(vector<Vertex*>& g, int src) {
 	NOTE: Doesn't work with negative weights.
 	TC: O(V + ElogV)
 
+ 	Why O(V + ElogV) and not O(V + ElogE)? 
+ 	In worst case, each node can have an edge to evey other node, E = V^2
+ 	O(E) = O(V^2), so O(logE) = O(log(V^2)) = 2 O(logV) = O(logV).
+  
 	1. set the distance for all the vertices as INF
 	2. dist[src] = 0
 	3. add the neighbouring vertices with their distance from source
