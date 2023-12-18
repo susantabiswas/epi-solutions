@@ -542,8 +542,12 @@ vector<int> bellmanFord(vector<Vertex*>& g, int src) {
 /*
 	Shortest distance between source vertex SRC to target vertex.
 	NOTE: Doesn't work with negative weights.
-	TC: O(E + ElogV) (Total E edges can be explored + For each of E edges, we might add them to heap of size E)
-
+	TC: O(E + (V + E) * logV) (Total E edges can be explored during Dijikstra + For each of E edges, we might add them to heap of size E and we can pop V times)
+ 	 ~ O(E + (V + E)logV) = Initial TC that captures all the operations
+   
+	 ~ O(E + ElogV), commonly written as O(ElogV) when V is small compared to E
+  	~ O(ElogV), since ElogV > E
+   
  	Why O(E + ElogV) and not O(E + ElogE)? 
  	In worst case, each node can have an edge to evey other node, E = V^2
  	O(E) = O(V^2), so O(logE) = O(log(V^2)) = 2 O(logV) = O(logV).
