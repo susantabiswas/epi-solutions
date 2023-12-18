@@ -542,9 +542,9 @@ vector<int> bellmanFord(vector<Vertex*>& g, int src) {
 /*
 	Shortest distance between source vertex SRC to target vertex.
 	NOTE: Doesn't work with negative weights.
-	TC: O(V + ElogV)
+	TC: O(E + ElogV) (Total E edges can be explored + For each of E edges, we might add them to heap of size E)
 
- 	Why O(V + ElogV) and not O(V + ElogE)? 
+ 	Why O(E + ElogV) and not O(E + ElogE)? 
  	In worst case, each node can have an edge to evey other node, E = V^2
  	O(E) = O(V^2), so O(logE) = O(log(V^2)) = 2 O(logV) = O(logV).
   
