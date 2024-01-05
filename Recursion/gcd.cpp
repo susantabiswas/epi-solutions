@@ -19,7 +19,33 @@
 #include<vector>
 using namespace std;
 
-// finds the GCD of two numbers
+// EUCLIDEAN DIVISION METHOD: finds the GCD of two numbers
+/*
+    TC: O(logn), n = max(n, m)
+    Worst case is when n and m are consecutive fibonacci terms.
+    n = fib(N), m = fib(N-1)
+    n = fib(N-1) + fib(N-2)
+    n = m + k
+    
+    now n = n % m 
+    New values: gcd(n % m, m) => (k, m) => (F(N-2), F(N-1))
+    n = k (since diff between n and m is k)
+
+    after swapping
+    so n = m which is (fib(N-1))
+    m = k which is (fib(N-2))
+    
+    So we will now solve for the greater value F(N-1), so effectively we
+    took only one fibonaaci step. This means, it will take N fib steps to reach the
+    terminal value 1.
+    Nth fib number = N^(golden ratio) ~ N ^ 1.62
+    
+    (1.62) ^ N = n
+    N = log(1.62 base) (n)
+    N = log(n)
+    
+    where n = max of inputs 
+*/
 int gcd(const int a, const int b){
     // if the bigger number is zero, that means the 'b' 
     // can divide 'a'
@@ -33,30 +59,6 @@ int gcd(const int a, const int b){
         return gcd(b % a, a);
 }
 
-/*
-    TC: O(logn), n = max(n, m)
-    Worst case is when n and m are consecutive fibonacci terms.
-    n = fib(N), m = fib(N-1)
-    n = fib(N-1) + fib(N-2)
-    n = m + k
-    
-    now n = n % m 
-    n = k (since diff between n and m is k)
-    after swapping
-    so n = b(fib(N-1))
-    m = k (fib(N-2))
-    
-    n = fib(N-1) + fib(N-2),
-    so it will take N fibonacci steps, so complexity reduces to finding 
-    complexity of finding Nth fibonacci num
-    which is (golden ratio) ^ N
-    
-    (1.62) ^ N = n
-    N = log(1.62 base) (n)
-    N = log(n)
-    
-    where n = max of inputs 
-*/
 int gcd2(int n, int m) {
     if (m == 0) 
         return n;
@@ -68,6 +70,24 @@ int gcd2(int n, int m) {
     return n;
 }
 
+/*
+    Subtraction Method
+
+    TC: O(a + b)
+
+    Worst case is when the diff is decreased by only 1 in each call. This means we are progressing
+    by making the greater number smaller by just 1.
+    This can continue till we reach the base case of 1 in worst case.
+    So O(a + b)
+*/
+int gcd3(int a, int b) {
+    if(a == b)
+        return b;
+    if(a > b)
+        return gcd3(a - b, b);
+    else
+        return gcd3(b - a, a);
+}
 
 int main(){
     cout << gcd2(20, 0) << endl;
