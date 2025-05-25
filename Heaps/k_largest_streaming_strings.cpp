@@ -9,8 +9,9 @@
 		based on length of string. Since it is a min-heap it will always have the shortest 
 		string at top. We push the current string in it and if heap size > k, pop the smallest.
 
-		TC: O(klogk), O(logk) for insertion and deletion and we do it 'n' no. of times
-		SC: O(k)
+		TC: O(nlogk + nL), O(logk) for insertion and deletion and we do it 'n' no. of times. 
+  			Each time string is copied so it takes O(L), L = Longest string
+		SC: O(kL)
 	*/
 
 #include <iostream>
